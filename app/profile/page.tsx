@@ -25,7 +25,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background">
  
-      <main className="container py-8">
+      <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1">

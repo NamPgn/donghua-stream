@@ -14,7 +14,7 @@ export default function NewReleasesPage() {
     <div className="min-h-screen bg-background">
 
 
-      <main className="container py-8">
+      <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1">
@@ -77,7 +77,7 @@ export default function NewReleasesPage() {
 
       {/* Footer */}
       <footer className="border-t bg-muted/50">
-        <div className="container py-8">
+        <div className="container py-8 mx-auto px-2 md:px-0">
           <div className="text-center text-sm text-muted-foreground">
             &copy; 2025 动漫天地 AnimeWorld. 保留所有权利。
           </div>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Wrapper } from "@/components/wrapper"
 
 interface AnimeProduct {
 	_id: string
@@ -58,6 +59,7 @@ interface Anime {
 	createdAt: string
 	updatedAt: string
 	latestProductUploadDate: string
+	relatedSeasons: string
 }
 
 interface AnimeClientProps {
@@ -147,7 +149,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 				</div>
 			</div>
 
-			<main className="container py-8 mx-auto">
+			<Wrapper>
 				<Tabs defaultValue="info" className="w-full">
 					<TabsList className="mb-6">
 						<TabsTrigger value="info">Thông tin</TabsTrigger>
@@ -197,9 +199,9 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 							<h2 className="text-xl font-semibold mb-3">Danh sách tập</h2>
 							<div className="grid gap-3">
 								{anime.products && anime.products.length > 0
-									? anime.products.map((product) => (
+									? anime.products.map((product, index) => (
 										<div
-											key={product._id}
+											key={index}
 											className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
 										>
 											<div className="flex items-center gap-3">
@@ -266,7 +268,8 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 						</div>
 					</TabsContent>
 				</Tabs>
-			</main>
+
+			</Wrapper>
 		</>
 	)
 } 

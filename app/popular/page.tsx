@@ -13,7 +13,7 @@ export default function PopularPage() {
     <div className="min-h-screen bg-background">
  
 
-      <main className="container py-8">
+      <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1">
@@ -38,7 +38,7 @@ export default function PopularPage() {
                   <div className="relative h-[200px] rounded-lg overflow-hidden">
                     <div className="absolute inset-0">
                       <Image
-                        src={anime.coverImage || "/placeholder.svg"}
+                        src={anime.coverImage}
                         alt={anime.title}
                         className="w-full h-full object-cover transition-transform group-hover:scale-105"
                       />
@@ -99,7 +99,7 @@ export default function PopularPage() {
                             <div className="font-medium text-muted-foreground w-5 text-center">{index + 1}</div>
                             <div className="relative h-16 w-12 overflow-hidden rounded">
                               <Image
-                                src={anime.image || "/placeholder.svg"}
+                                src={anime.image}
                                 alt={anime.title}
                                 className="w-full h-full object-cover"
                               />
@@ -125,7 +125,7 @@ export default function PopularPage() {
 
       {/* Footer */}
       <footer className="border-t bg-muted/50">
-        <div className="container py-8">
+        <div className="container py-8 mx-auto px-2 md:px-0">
           <div className="text-center text-sm text-muted-foreground">
             &copy; 2025 动漫天地 AnimeWorld. 保留所有权利。
           </div>

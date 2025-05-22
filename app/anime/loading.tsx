@@ -1,6 +1,7 @@
 "use client"
 
 import { Skeleton } from "@/components/ui/skeleton"
+import { Wrapper } from "@/components/wrapper"
 
 export default function AnimeLoading() {    
   return (
@@ -34,7 +35,7 @@ export default function AnimeLoading() {
         </div>
       </div>
 
-      <main className="container py-8 mx-auto">
+      <Wrapper>
         <div className="space-y-6">
           {/* Tabs skeleton */}
           <div className="flex gap-2 mb-6">
@@ -63,7 +64,7 @@ export default function AnimeLoading() {
             </div>
           </div>
         </div>
-      </main>
+      </Wrapper>
     </>
   )
 } 

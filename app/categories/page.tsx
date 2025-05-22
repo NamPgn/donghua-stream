@@ -1,62 +1,58 @@
+'use client'
+
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { animeData } from "@/lib/data"
+import { useSeriesContext } from "@/contexts/SeriesContext"
 
-// Get all unique categories
-const getAllCategories = () => {
-  const categories = new Set<string>()
-  animeData.forEach((anime) => {
-    anime.categories.forEach((category) => {
-      categories.add(category)
-    })
-  })
-  return Array.from(categories).sort()
+interface Series {
+  _id: string;
+  name: string;
+  slug: string;
 }
 
+
+
 export default function CategoriesPage() {
-  const categories = getAllCategories()
+  const { data: series } = useSeriesContext();
 
   return (
     <div className="min-h-screen bg-background">
-
-
-      <main className="container py-8">
+      <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" />
-              返回 Back
+              Trang Chủ
             </Button>
           </Link>
-          <h1 className="text-3xl font-bold">动漫分类 Categories</h1>
+          <h1 className="text-3xl font-bold">Thể Loại</h1>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
-          {categories.map((category) => (
+          {series?.map((category: Series) => (
             <Link
-              key={category}
-              href={`/categories/${category}`}
+              key={category._id}
+              href={`/categories/${category.slug}`}
               className="bg-muted hover:bg-muted/80 transition-colors rounded-lg p-6 text-center"
             >
-              <div className="font-medium text-lg">{category}</div>
+              <div className="font-medium text-lg">{category.name}</div>
               <div className="text-sm text-muted-foreground mt-1">
-                {animeData.filter((anime) => anime.categories.includes(category)).length} 部作品
+                {category.name}
               </div>
             </Link>
           ))}
         </div>
 
         {/* Display animes by category */}
-        {categories.map((category) => {
+        {series?.map((category: Series) => {
           return (
-            <section key={category} className="mb-12">
+            <section key={category._id} className="mb-12">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">{category}</h2>
-                <Link href={`/categories/${category}`} className="text-sm text-primary hover:underline">
-                  查看全部 View All
+                <h2 className="text-2xl font-bold">{category.name}</h2>
+                <Link href={`/categories/${category.slug}`} className="text-sm text-primary hover:underline">
+                  Xem thêm
                 </Link>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">

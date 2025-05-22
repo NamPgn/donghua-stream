@@ -1,16 +1,23 @@
 'use client'
-
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { useAnime, useAnimePopular } from "@/hooks/useAnime"
-
 import { AnimationCard } from "@/components/animation-card"
 import { FeaturedSlider } from "@/components/featured-slider"
 import Loading from "@/app/loading"
+import { Wrapper } from "@/components/wrapper"
+import { useSeriesContext } from "@/contexts/SeriesContext"
+
+interface seriesProp {
+  _id: string;
+  slug: string;
+  name: string
+}
 
 export default function HomePage() {
   const { data: animeData, isLoading } = useAnime();
-  const { data: animePopular } = useAnimePopular()
+  const { data: animePopular } = useAnimePopular();
+  const { data: series } = useSeriesContext();
   const animes = animeData?.data || []
   if (isLoading) {
     return <Loading />
@@ -18,7 +25,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container py-6 mx-auto">
+      <Wrapper>
         {/* Hero Section */}
         <section className="mb-12">
           <FeaturedSlider />
@@ -56,20 +63,25 @@ export default function HomePage() {
 
         {/* Categories Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">动漫分类 Categories</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Thể Loại</h2>
+            <Link href="/categories" className="flex items-center text-sm text-primary hover:underline">
+              View All <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {["武侠", "仙侠", "玄幻", "科幻", "历史", "冒险"].map((category) => (
+            {series && series.map((category: seriesProp) => (
               <Link
-                key={category}
-                href={`/categories/${category}`}
+                key={category._id}
+                href={`/categories/${category.slug}`}
                 className="bg-muted hover:bg-muted/80 transition-colors rounded-lg p-4 text-center"
               >
-                <div className="font-medium">{category}</div>
+                <div className="font-medium">{category.name}</div>
               </Link>
             ))}
           </div>
         </section>
-      </main>
+      </Wrapper>
     </div>
   )
 }

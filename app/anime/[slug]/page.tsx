@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation"
-import { getAnimeData } from "@/hooks/useAnime"
 import { AnimeClient } from "../anime-client"
+import { getAnimeData } from "@/services/anime.server";
+import NominatedFilm from "@/app/watch/_components/NominatedFilm";
+import { Wrapper } from "@/components/wrapper";
 
 // interface PageProps {
 //   params: {
@@ -61,9 +63,15 @@ export default async function AnimePage({ params }: { params: tParams }) {
     }
 
     return (
-      <AnimeClient
-        anime={animeData}
-      />
+      <>
+        <AnimeClient
+          anime={animeData}
+        />
+        <Wrapper>
+          <NominatedFilm seriesId={animeData?.relatedSeasons} categoryId={animeData?._id} />
+        </Wrapper>
+      </>
+
     )
   } catch (error) {
     console.error('Error in AnimePage:', error)

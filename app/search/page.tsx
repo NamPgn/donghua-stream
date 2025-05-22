@@ -11,7 +11,9 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { AnimationCard } from "@/components/animation-card"
 import { animeData } from "@/lib/data"
-import { searchCategory } from "@/hooks/useAnime"
+import { useSearchAnime } from "@/hooks/useAnime"
+import type { Anime } from "@/services/api/anime.api"
+import { Wrapper } from "@/components/wrapper"
 
 // Get all unique categories
 const getAllCategories = () => {
@@ -28,45 +30,23 @@ export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [statusFilter, setStatusFilter] = useState<string | null>(null)
-  const [searchResults, setSearchResults] = useState<[]>([])
   const [showFilters, setShowFilters] = useState(false)
-  const [isSearching, setIsSearching] = useState(false)
 
   const categories = getAllCategories()
 
+  // Move the hook to component level
+  const { data: searchResults, isLoading: isSearching } = useSearchAnime(searchQuery)
   useEffect(() => {
     // Get search query from URL if it exists
     const urlParams = new URLSearchParams(window.location.search)
     const query = urlParams.get("q")
     if (query) {
       setSearchQuery(query)
-      handleSearch(query)
     }
   }, [])
 
-  const handleSearch = async (query: string) => {
-    if (!query.trim()) {
-      setSearchResults([])
-      return
-    }
-
-    try {
-      setIsSearching(true)
-      const data = await searchCategory(query)
-      if (data) {
-        setSearchResults(data || [])
-      }
-    } catch (error) {
-      console.error('Search error:', error)
-      setSearchResults([])
-    } finally {
-      setIsSearching(false)
-    }
-  }
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    handleSearch(searchQuery)
     // Update URL with search query
     const url = new URL(window.location.href)
     url.searchParams.set("q", searchQuery)
@@ -86,7 +66,7 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <main className="container py-8 mx-auto">
+      <Wrapper>
         <div className="flex items-center gap-2 mb-6">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1">
@@ -248,14 +228,16 @@ export default function SearchPage() {
             <div>
               <h2 className="text-xl font-semibold mb-4">
                 Kết quả tìm kiếm{" "}
-                <span className="text-muted-foreground font-normal">({searchResults.length})</span>
+                <span className="text-muted-foreground font-normal">
+                  ({Array.isArray(searchResults) ? searchResults.length : 0})
+                </span>
               </h2>
 
-              {searchResults.length > 0 ? (
+              {Array.isArray(searchResults) && searchResults.length > 0 ? (
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                  {searchResults.map((anime, index: number) => (
+                  {searchResults.map((anime: Anime) => (
                     <AnimationCard
-                      key={index}
+                      key={anime._id}
                       anime={anime}
                     />
                   ))}
@@ -271,7 +253,7 @@ export default function SearchPage() {
             </div>
           </div>
         </div>
-      </main>
+      </Wrapper>
     </div>
   )
 }

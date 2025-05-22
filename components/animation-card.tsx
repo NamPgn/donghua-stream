@@ -78,7 +78,7 @@ export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
         <CardContent className="p-2 sm:p-2.5">
           <h3 className="font-medium text-xs sm:text-sm line-clamp-1 mb-0.5">{anime.name}</h3>
           <p className="text-[10px] sm:text-[11px] text-muted-foreground line-clamp-1 mb-1 sm:mb-1.5">{anime.anotherName ? anime.anotherName : '?'}</p>
-         
+          
         </CardContent>
       </Card>
     </Link>

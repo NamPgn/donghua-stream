@@ -42,13 +42,13 @@ export function FeaturedSlider() {
       >
         {data.data.map((poster) => (
           <SwiperSlide key={poster._id}>
-            <div className="aspect-[16/9] sm:aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden">
+            <div className="aspect-[16/9] sm:aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden ">
               <Image
                 src={poster.poster}
                 alt={poster.name}
                 width={1600}
                 height={800}
-                className="object-cover"
+                className="object-cover h-full"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
@@ -85,10 +85,11 @@ export function FeaturedSlider() {
       </Swiper>
 
       {/* Custom Navigation Buttons */}
-      <Button
+     <div className="hidden md:block">
+     <Button
         variant="outline"
         size="icon"
-        className="custom-swiper-button-prev bg-background/80 absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
+        className=" custom-swiper-button-prev bg-background/80 absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
       >
         <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
       </Button>
@@ -96,10 +97,11 @@ export function FeaturedSlider() {
       <Button
         variant="outline"
         size="icon"
-        className="custom-swiper-button-next bg-background/80 absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
+        className=" custom-swiper-button-next bg-background/80 absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
       >
         <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
       </Button>
+     </div>
     </div>
   )
 }

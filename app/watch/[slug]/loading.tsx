@@ -1,11 +1,12 @@
 "use client"
 
 import { Skeleton } from "@/components/ui/skeleton"
+import { Wrapper } from "@/components/wrapper"
 
 export default function Loading() {
   return (
     <div className="min-h-screen bg-background">
-      <main className="container py-6 mx-auto">
+      <Wrapper>
         {/* Back button skeleton */}
         <div className="flex items-center gap-2 mb-4">
           <Skeleton className="h-9 w-[140px]" />
@@ -97,7 +98,7 @@ export default function Loading() {
             </div>
           </div>
         </div>
-      </main>
+      </Wrapper>
     </div>
   )
 }

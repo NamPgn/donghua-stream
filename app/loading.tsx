@@ -1,9 +1,10 @@
 import { Skeleton } from "@/components/ui/skeleton"
+import { Wrapper } from "@/components/wrapper"
 
 export default function HomeLoading() {
   return (
     <div className="min-h-screen bg-background ">
-      <main className="container py-6 mx-auto">
+     <Wrapper>
         {/* Hero Skeleton */}
         <section className="mb-12">
           <Skeleton className="w-full aspect-[21/9] md:aspect-[21/7] rounded-xl" />
@@ -50,11 +51,11 @@ export default function HomeLoading() {
               ))}
           </div>
         </section>
-      </main>
+      </Wrapper>
 
       {/* Footer Skeleton */}
       <footer className="border-t bg-muted/50">
-        <div className="container py-8 md:py-12">
+        <div className="container py-8 mx-auto px-2 md:px-0 md:py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {Array(4)
               .fill(0)
