@@ -7,9 +7,8 @@ import { getAnimeEpisode } from "@/services/anime.server"
 export async function generateMetadata(
   { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  const { slug } = await params
+  const { slug } = params
 
-  try {
     const animeData = await getAnimeEpisode(slug)
 
     if (!animeData) {
@@ -47,30 +46,18 @@ export async function generateMetadata(
         canonical: `/xem-phim/${slug}`
       }
     }
-  } catch (error) {
-    console.error('Error generating metadata:', error)
-    return {
-      title: 'Lỗi',
-      description: 'Đã xảy ra lỗi khi tải trang'
-    }
-  }
 }
 
-export default async function WatchPage(  { params }: { params: { slug: string } }) {
-  const { slug } = await params
+export default async function WatchPage({ params }: { params: { slug: string } }) {
+  const { slug } = params
 
-  try {
-    const animeData = await getAnimeEpisode(slug)
-    if (!animeData) {
-      notFound()
-    }
-    return (
-      <WatchClient
-        anime={animeData}
-      />
-    )
-  } catch (error) {
-    console.error('Error in WatchPage:', error)
+  const animeData = await getAnimeEpisode(slug)
+  if (!animeData) {
     notFound()
   }
+  return (
+    <WatchClient
+      anime={animeData}
+    />
+  )
 }

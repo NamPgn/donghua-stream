@@ -65,7 +65,6 @@ export async function getCategoryNominated(seriesId: string, categoryId: string)
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/nominated?${queryParams}`,
             {
                 method: "GET",
-                cache: 'force-cache',
                 next: {
                     revalidate: 3600
                 }

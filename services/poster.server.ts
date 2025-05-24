@@ -28,7 +28,6 @@ export async function fetchPosters(): Promise<PosterResponse> {
       revalidate: 15,
       tags: ['posters']
     },
-    cache: 'force-cache', // Force caching
     headers: {
       'Content-Type': 'application/json',
     },
@@ -48,7 +47,6 @@ export async function getPosterData(id: string) {
         revalidate: 15, // Cache for 1 hour
         tags: [`poster-${id}`] // Add tag for manual revalidation if needed
       },
-      cache: 'force-cache', // Force caching
       headers: {
         'Content-Type': 'application/json',
       },

@@ -11,7 +11,6 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = params
 
-  try {
     const animeData = await getAnimeData(slug)
 
     if (!animeData) {
@@ -51,39 +50,27 @@ export async function generateMetadata(
         canonical: `/phim/${slug}`
       }
     }
-  } catch (error) {
-    console.error('Error generating metadata:', error)
-    return {
-      title: 'Lỗi',
-      description: 'Đã xảy ra lỗi khi tải trang'
-    }
-  }
 }
 
 
 export default async function AnimePage({ params }: { params: { slug: string } }) {
   const { slug } = params
 
-  try {
-    const animeData = await getAnimeData(slug)
+  const animeData = await getAnimeData(slug)
 
-    if (!animeData) {
-      notFound()
-    }
-
-    return (
-      <>
-        <AnimeClient
-          anime={animeData}
-        />
-        <Wrapper>
-          <NominatedFilm seriesId={animeData?.relatedSeasons} categoryId={animeData?._id} />
-        </Wrapper>
-      </>
-
-    )
-  } catch (error) {
-    console.error('Error in AnimePage:', error)
+  if (!animeData) {
     notFound()
   }
+
+  return (
+    <>
+      <AnimeClient
+        anime={animeData}
+      />
+      <Wrapper>
+        <NominatedFilm seriesId={animeData?.relatedSeasons} categoryId={animeData?._id} />
+      </Wrapper>
+    </>
+
+  )
 }
