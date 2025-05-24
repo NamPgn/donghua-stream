@@ -36,8 +36,8 @@ interface AnimationCardProps {
 
 export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
   return (
-    <Link href={`/phim/${anime.slug}`}>
-      <Card className="overflow-hidden h-full transition-all hover:shadow-md group">
+    <Card className="overflow-hidden h-full transition-all hover:shadow-md group">
+      <Link href={`/phim/${anime.slug}`} prefetch={false}>
         <div className="relative aspect-[3/4] overflow-hidden">
           <Image
             src={anime.linkImg || "/placeholder.svg"}
@@ -75,12 +75,13 @@ export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
             </div>
           </div>
         </div>
-        <CardContent className="p-2 sm:p-2.5">
+      </Link>
+      <CardContent className="p-2 sm:p-2.5">
+        <Link href={`/phim/${anime.slug}`} prefetch={false} className="hover:text-primary transition-colors">
           <h3 className="font-medium text-xs sm:text-sm line-clamp-1 mb-0.5">{anime.name}</h3>
           <p className="text-[10px] sm:text-[11px] text-muted-foreground line-clamp-1 mb-1 sm:mb-1.5">{anime.anotherName ? anime.anotherName : '?'}</p>
-          
-        </CardContent>
-      </Card>
-    </Link>
+        </Link>
+      </CardContent>
+    </Card>
   )
 }
