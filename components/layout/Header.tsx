@@ -54,7 +54,7 @@ export default function Header() {
           {/* Logo and Desktop Navigation */}
           <div className="flex items-center gap-4 md:gap-8">
             <Link href="/" className="text-xl md:text-2xl font-bold">
-              AnimeStream
+              HH3D
             </Link>
             <nav className="hidden md:flex gap-6">
               {navigation.map((item) => (

@@ -52,7 +52,7 @@ export default function Footer() {
           ))}
         </div>
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} AnimeStream. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} HH3D. All rights reserved.</p>
         </div>
       </div>
     </footer>
