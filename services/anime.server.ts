@@ -3,9 +3,6 @@ import { notFound } from "next/navigation"
 export async function getAnimeData(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${slug}`, {
-            next: {
-                tags: [`anime-${slug}`]
-            },
             cache: "no-cache",
             headers: {
                 'Content-Type': 'application/json',
@@ -34,9 +31,6 @@ export async function getAnimeData(slug: string) {
 export async function getAnimeEpisode(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${slug}`, {
-            next: {
-                tags: [`anime-${slug}`]
-            },
             cache: "no-cache",
             headers: {
                 'Content-Type': 'application/json',

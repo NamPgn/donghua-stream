@@ -3,10 +3,9 @@ import { Metadata } from "next"
 import { WatchClient } from "./watch-client"
 import { getAnimeEpisode } from "@/services/anime.server"
 
-type tParams = Promise<{ slug: string }>;
 
 export async function generateMetadata(
-  { params }: { params: tParams }
+  { params }: { params: { slug: string } }
 ): Promise<Metadata> {
   const { slug } = await params
 
@@ -57,7 +56,7 @@ export async function generateMetadata(
   }
 }
 
-export default async function WatchPage({ params }: { params: tParams }) {
+export default async function WatchPage(  { params }: { params: { slug: string } }) {
   const { slug } = await params
 
   try {

@@ -6,12 +6,10 @@ import NominatedFilm from "@/app/xem-phim/_components/NominatedFilm";
 import { Wrapper } from "@/components/wrapper";
 
 
-type tParams = Promise<{ slug: string }>;
-
 export async function generateMetadata(
-  { params }: { params: tParams }
+  { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  const { slug } = await params
+  const { slug } = params
 
   try {
     const animeData = await getAnimeData(slug)
@@ -63,8 +61,8 @@ export async function generateMetadata(
 }
 
 
-export default async function AnimePage({ params }: { params: tParams }) {
-  const { slug } = await params
+export default async function AnimePage({ params }: { params: { slug: string } }) {
+  const { slug } = params
 
   try {
     const animeData = await getAnimeData(slug)
