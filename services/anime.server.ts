@@ -4,10 +4,10 @@ export async function getAnimeData(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${slug}`, {
             next: {
-                revalidate: 3600, // Cache for 1 hour
-                tags: [`anime-${slug}`] // Add tag for manual revalidation if needed
+                revalidate: 15, 
+                tags: [`anime-${slug}`] 
             },
-            cache: 'force-cache', // Force caching
+            cache: 'force-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
