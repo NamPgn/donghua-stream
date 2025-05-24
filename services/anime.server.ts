@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 
 export async function getAnimeData(slug: string) {
     try {
-        const res = await fetch(`http://localhost:8001/api/category/${slug}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${slug}`, {
             next: {
                 revalidate: 3600, // Cache for 1 hour
                 tags: [`anime-${slug}`] // Add tag for manual revalidation if needed
@@ -34,7 +34,7 @@ export async function getAnimeData(slug: string) {
 
 export async function getAnimeEpisode(slug: string) {
     try {
-        const res = await fetch(`http://localhost:8001/api/product/${slug}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${slug}`, {
             next: {
                 revalidate: 12,
                 tags: [`anime-${slug}`]
