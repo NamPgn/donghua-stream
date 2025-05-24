@@ -4,10 +4,9 @@ export async function getAnimeData(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${slug}`, {
             next: {
-                revalidate: 15, 
-                tags: [`anime-${slug}`] 
+                tags: [`anime-${slug}`]
             },
-            cache: 'force-cache',
+            cache: "no-cache",
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -36,10 +35,9 @@ export async function getAnimeEpisode(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${slug}`, {
             next: {
-                revalidate: 12,
                 tags: [`anime-${slug}`]
             },
-            cache: 'force-cache',
+            cache: "no-cache",
             headers: {
                 'Content-Type': 'application/json',
             },
