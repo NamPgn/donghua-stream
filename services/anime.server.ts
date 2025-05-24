@@ -3,9 +3,7 @@ import { notFound } from "next/navigation"
 export async function getAnimeData(slug: string) {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${slug}`, {
-            next: {
-                revalidate: 3600 // Cache for 1 hour
-            },
+            cache: "no-cache",
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -80,23 +78,5 @@ export async function getCategoryNominated(seriesId: string, categoryId: string)
     } catch (error) {
         console.error('Error fetching category nominated:', error);
         return { data: [], error: "Failed to fetch category nominated" };
-    }
-}
-
-// New function to fetch both anime data and nominated films
-export async function getAnimeDataWithNominated(slug: string) {
-    try {
-        const [animeData, nominatedData] = await Promise.all([
-            getAnimeData(slug),
-            getCategoryNominated(slug, slug) // Using slug as both seriesId and categoryId for now
-        ]);
-
-        return {
-            anime: animeData,
-            nominated: nominatedData
-        };
-    } catch (error) {
-        console.error('Error fetching anime data with nominated:', error);
-        return null;
     }
 }
