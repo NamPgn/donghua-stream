@@ -5,17 +5,13 @@ import { getAnimeData } from "@/services/anime.server";
 import NominatedFilm from "@/app/xem-phim/_components/NominatedFilm";
 import { Wrapper } from "@/components/wrapper";
 
-interface PageProps {
-  params: {
-    slug: string
-  }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
+
+type tParams = Promise<{ slug: string }>;
 
 export async function generateMetadata(
-  { params }: PageProps
+  { params }: { params: tParams }
 ): Promise<Metadata> {
-  const { slug } = params
+  const { slug } = await params
 
   try {
     const animeData = await getAnimeData(slug)
@@ -66,7 +62,6 @@ export async function generateMetadata(
   }
 }
 
-type tParams = Promise<{ slug: string }>;
 
 export default async function AnimePage({ params }: { params: tParams }) {
   const { slug } = await params

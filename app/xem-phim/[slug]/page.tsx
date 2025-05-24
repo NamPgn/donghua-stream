@@ -3,17 +3,12 @@ import { Metadata } from "next"
 import { WatchClient } from "./watch-client"
 import { getAnimeEpisode } from "@/services/anime.server"
 
-interface PageProps {
-  params: {
-    slug: string
-  }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
+type tParams = Promise<{ slug: string }>;
 
 export async function generateMetadata(
-  { params }: PageProps
+  { params }: { params: tParams }
 ): Promise<Metadata> {
-  const { slug } = params
+  const { slug } = await params
 
   try {
     const animeData = await getAnimeEpisode(slug)
@@ -62,8 +57,8 @@ export async function generateMetadata(
   }
 }
 
-export default async function WatchPage({ params }: PageProps) {
-  const { slug } = params
+export default async function WatchPage({ params }: { params: tParams }) {
+  const { slug } = await params
 
   try {
     const animeData = await getAnimeEpisode(slug)
@@ -71,9 +66,9 @@ export default async function WatchPage({ params }: PageProps) {
       notFound()
     }
     return (
-        <WatchClient
-          anime={animeData}
-        />
+      <WatchClient
+        anime={animeData}
+      />
     )
   } catch (error) {
     console.error('Error in WatchPage:', error)
