@@ -9,6 +9,7 @@ export interface Poster {
   lang: string;
   quality: string;
   anotherName: string;
+  link:string;
 }
 
 export interface PosterResponse {
@@ -32,11 +33,11 @@ export async function fetchPosters(): Promise<PosterResponse> {
       'Content-Type': 'application/json',
     },
   });
-  
+
   if (!response.ok) {
     throw new Error('Failed to fetch posters');
   }
-  
+
   return response.json();
 }
 

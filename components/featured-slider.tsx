@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, ChevronRight, Play } from "lucide-react"
 import { useSlider } from "@/hooks/useSlider"
+import type { Poster } from "@/services/api/poster.api"
+import Link from "next/link"
 
 export function FeaturedSlider() {
   const { data, isLoading, error } = useSlider()
@@ -24,7 +26,6 @@ export function FeaturedSlider() {
   if (error || !data?.data) {
     return null
   }
-
 
   return (
     <div className="relative">
@@ -40,7 +41,7 @@ export function FeaturedSlider() {
         loop
         className="rounded-xl overflow-hidden"
       >
-        {data.data.map((poster) => (
+        {data.data.map((poster: Poster) => (
           <SwiperSlide key={poster._id}>
             <div className="aspect-[16/9] sm:aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden ">
               <Image
@@ -65,16 +66,18 @@ export function FeaturedSlider() {
                     {poster.descriptions}
                   </p>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
-                    <Button size="sm" className="gap-2 text-xs sm:text-sm">
-                      <Play className="h-3 w-3 sm:h-4 sm:w-4" />
-                      Watch Now
-                    </Button>
+                    <Link href={`${poster.link}`}>
+                      <Button size="sm" className="gap-2 text-xs sm:text-sm">
+                        <Play className="h-3 w-3 sm:h-4 sm:w-4" />
+                        Xem ngay
+                      </Button>
+                    </Link>
                     <Button
                       variant="outline"
                       size="sm"
                       className="text-xs sm:text-sm text-white border-white/30 bg-white/10 hover:bg-white/20"
                     >
-                      Learn More
+                      Tìm hiểu thêm
                     </Button>
                   </div>
                 </div>
@@ -85,23 +88,23 @@ export function FeaturedSlider() {
       </Swiper>
 
       {/* Custom Navigation Buttons */}
-     <div className="hidden md:block">
-     <Button
-        variant="outline"
-        size="icon"
-        className=" custom-swiper-button-prev bg-background/80 absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
-      >
-        <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
-      </Button>
+      <div className="hidden md:block">
+        <Button
+          variant="outline"
+          size="icon"
+          className=" custom-swiper-button-prev bg-background/80 absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
+        >
+          <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+        </Button>
 
-      <Button
-        variant="outline"
-        size="icon"
-        className=" custom-swiper-button-next bg-background/80 absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
-      >
-        <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
-      </Button>
-     </div>
+        <Button
+          variant="outline"
+          size="icon"
+          className=" custom-swiper-button-next bg-background/80 absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 backdrop-blur-sm transition-all duration-300 hover:scale-110 h-8 w-8 sm:h-10 sm:w-10"
+        >
+          <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+        </Button>
+      </div>
     </div>
   )
 }

@@ -11,6 +11,7 @@ export interface Poster {
   lang: string;
   quality: string;
   anotherName: string;
+  link: string
 }
 
 export interface PosterResponse {

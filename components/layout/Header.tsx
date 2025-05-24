@@ -9,8 +9,8 @@ import { useState, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 
 const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'Popular', href: '/popular' },
+  { name: 'Trang chủ', href: '/' },
+  // { name: 'Popular', href: '/popular' },
   // { name: 'New', href: '/new' },
   // { name: 'Categories', href: '/categories' },
 ];
@@ -76,7 +76,7 @@ export default function Header() {
             <form onSubmit={handleSearch} className="relative w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search anime..."
+                placeholder="Tìm kiếm phim..."
                 className="pl-8"
                 value={searchQuery}
                 onChange={handleInputChange}
@@ -118,7 +118,7 @@ export default function Header() {
             <form onSubmit={handleSearch} className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search anime..."
+                placeholder="Tìm kiếm phim..."
                 className="pl-8"
                 value={searchQuery}
                 onChange={handleInputChange}

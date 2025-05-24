@@ -1,6 +1,6 @@
 'use client'
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Flame, History, Tags } from "lucide-react"
 import { useAnime, useAnimePopular } from "@/hooks/useAnime"
 import { AnimationCard } from "@/components/animation-card"
 import { FeaturedSlider } from "@/components/featured-slider"
@@ -34,7 +34,10 @@ export default function HomePage() {
         {/* New Releases Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold"> New Releases</h2>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <History className="w-6 h-6 text-blue-500" />
+              Mới cập nhật
+            </h2>
             <Link href="/new" className="flex items-center text-sm text-primary hover:underline">
               View All <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
@@ -49,7 +52,10 @@ export default function HomePage() {
         {/* Popular Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Popular</h2>
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Flame className="w-6 h-6 text-red-500" />
+              Thịnh Hành
+            </h2>
             <Link href="/popular" className="flex items-center text-sm text-primary hover:underline">
               View All <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
@@ -64,7 +70,11 @@ export default function HomePage() {
         {/* Categories Section */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Thể Loại</h2>
+
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Tags className="w-6 h-6 text-green-600" />
+              Thể Loại
+            </h2>
             <Link href="/categories" className="flex items-center text-sm text-primary hover:underline">
               View All <ArrowRight className="ml-1 h-4 w-4" />
             </Link>

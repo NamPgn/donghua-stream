@@ -36,7 +36,7 @@ interface AnimationCardProps {
 
 export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
   return (
-    <Link href={`/anime/${anime.slug}`}>
+    <Link href={`/phim/${anime.slug}`}>
       <Card className="overflow-hidden h-full transition-all hover:shadow-md group">
         <div className="relative aspect-[3/4] overflow-hidden">
           <Image
