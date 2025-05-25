@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowLeft, Star, Calendar, Clock, Film, Globe, BarChart4 } from "lucide-react"
+import { ArrowLeft, Star, Calendar, Clock, Film, Globe, BarChart4, ChevronUp, ChevronDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -9,6 +9,8 @@ import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Wrapper } from "@/components/wrapper"
 import MVImage from "@/components/ui/image"
+import { useState } from "react"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 interface AnimeProduct {
 	_id: string
@@ -67,10 +69,11 @@ interface AnimeClientProps {
 }
 
 export function AnimeClient({ anime }: AnimeClientProps) {
+	const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
 	return (
 		<>
 			{/* Header with background image - Full width */}
-			<div className="relative h-[300px] md:h-[400px] w-full overflow-hidden">
+			<div className="relative h-[500px] md:h-[400px] w-full overflow-hidden">
 				<div className="absolute inset-0">
 					<MVImage
 						src={anime.linkImg}
@@ -80,16 +83,17 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 						priority
 					/>
 				</div>
-				<div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent h-[300px] md:h-[400px]" />
-				<div className="container relative h-[300px] md:h-[400px] flex flex-col justify-end pb-8 mx-auto">
-					<Link href="/" className="absolute top-4 md:top-8 ">
+				<div className="absolute inset-0 bg-gradient-to-t from-background md:via-background/50 via-background/0 to-transparent h-[500px] md:h-[400px]" />
+				<div className="container relative h-[500px] md:h-[400px] flex flex-col justify-end pb-8 mx-auto">
+					<Link href="/" className="absolute top-4 left-3 md:left-0 md:top-8">
 						<Button variant="outline" size="sm" className="gap-1 bg-background/80 backdrop-blur-sm cursor-pointer">
 							<ArrowLeft className="h-4 w-4" />
-							Trở về Trang chủ
+							<span className="hidden sm:inline">Trở về Trang chủ</span>
+							<span className="sm:hidden">Trở về</span>
 						</Button>
 					</Link>
-					<div className="flex flex-col md:flex-row gap-6 items-start">
-						<div className="relative h-[180px] w-[120px] md:h-[240px] md:w-[160px] rounded-lg overflow-hidden shadow-lg">
+					<div className="flex flex-col md:flex-row gap-6 items-start mt-auto md:mt-0">
+						<div className="relative h-[200px] w-[140px] md:h-[240px] md:w-[160px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
 							<MVImage
 								src={anime.linkImg || "/placeholder.svg"}
 								alt={anime.name}
@@ -98,14 +102,14 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								priority
 							/>
 						</div>
-						<div className="flex-1">
-							<div className="flex flex-wrap gap-2 mb-2">
+						<div className="flex-1 text-center md:text-left">
+							<div className="flex flex-wrap gap-2 mb-2 justify-center md:justify-start">
 								<Badge variant="secondary">{anime.type}</Badge>
 								<Badge variant="secondary">{anime.isMovie}</Badge>
 							</div>
-							<h1 className="text-2xl md:text-4xl font-bold mb-2 text-white">{anime.name}</h1>
-							<p className="text-sm md:text-base text-white/80 mb-4">{anime.anotherName}</p>
-							<div className="flex flex-wrap gap-4 text-sm mb-4">
+							<h1 className="text-2xl md:text-4xl font-bold mb-2 text-white line-clamp-2">{anime.name}</h1>
+							<p className="text-sm md:text-base text-white/80 mb-4 line-clamp-2">{anime.anotherName}</p>
+							<div className="flex flex-wrap gap-4 text-sm mb-4 justify-center md:justify-start">
 								<div className="flex items-center gap-1 text-white/90">
 									<Star className="h-4 w-4 text-yellow-500" />
 									<span>{anime.up} lượt thích</span>
@@ -131,18 +135,15 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 									<span>{anime.quality}</span>
 								</div>
 							</div>
-							<div className="flex gap-3">
+							<div className="flex gap-3 justify-center md:justify-start">
 								<Button asChild>
 									{
 										anime?.isMovie === 'drama' ?
 											<Link href={`/xem-phim/${anime.slug}-episode-${anime.products[0].seri}`}>Xem ngay</Link> :
 											<Link href={`/xem-phim/${anime.slug}`}>Xem ngay</Link>
 									}
-
 								</Button>
-								<Button variant="outline" className="text-white border-white/30 bg-white/10 hover:bg-white/20">
-									Thêm vào danh sách
-								</Button>
+								<Button variant="outline">Thêm vào danh sách</Button>
 							</div>
 						</div>
 					</div>
@@ -157,10 +158,21 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 						<TabsTrigger value="comments">Bình luận</TabsTrigger>
 					</TabsList>
 					<TabsContent value="info" className="space-y-6">
-						<div>
-							<h2 className="text-xl font-semibold mb-3">Nội dung</h2>
-							<p className="text-muted-foreground">{anime.des}</p>
-						</div>
+						<Collapsible open={isDescriptionOpen} onOpenChange={setIsDescriptionOpen}>
+							<CollapsibleTrigger className="flex items-center justify-between w-full mb-3 transition-colors">
+								<h2 className="text-xl font-semibold">Nội dung</h2>
+								{isDescriptionOpen ? (
+									<ChevronUp className="h-5 w-5" />
+								) : (
+									<ChevronDown className="h-5 w-5" />
+								)}
+							</CollapsibleTrigger>
+							<CollapsibleContent className="space-y-2">
+								<p className="text-muted-foreground leading-relaxed">
+									{anime.des}
+								</p>
+							</CollapsibleContent>
+						</Collapsible>
 						<Separator />
 						<div>
 							<h2 className="text-xl font-semibold mb-3">Thông tin chi tiết</h2>
