@@ -105,6 +105,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 												<Link
 													href={`/d/${anime.category.slug}-episode-${nextEpisode}`}
 													className="flex items-center gap-1"
+													prefetch={false}
 												>
 													Tập sau
 													<ChevronRight className="h-4 w-4" />
@@ -129,6 +130,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 																? `/d/${anime.category.slug}`
 																: `/d/${anime.category.slug}-episode-${product.seri}`
 														}
+														prefetch={false}
 													>
 														{anime.category.isMovie !== "drama" ? "Full" : `Tập ${product.seri}`}
 													</Link>
@@ -148,6 +150,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 										{prevEpisode && (
 											<Button variant="outline" size="sm" asChild>
 												<Link
+												prefetch={false}
 													href={`/d/${anime.category.slug}-episode-${prevEpisode}`}
 													className="flex items-center gap-1"
 												>
@@ -159,6 +162,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 										{nextEpisode && (
 											<Button variant="outline" size="sm" asChild>
 												<Link
+												prefetch={false}
 													href={`/d/${anime.category.slug}-episode-${nextEpisode}`}
 													className="flex items-center gap-1"
 												>
@@ -192,11 +196,11 @@ export function WatchClient({ anime }: { anime: Anime }) {
 													</div>
 													{anime.category.isMovie !== "drama" ? (
 														<Button size="sm" asChild disabled={!product.isApproved}>
-															<Link href={`/d/${anime.category.slug}`}>Xem</Link>
+															<Link prefetch={false} href={`/d/${anime.category.slug}`}>Xem</Link>
 														</Button>
 													) : (
 														<Button size="sm" asChild disabled={!product.isApproved}>
-															<Link href={`/d/${anime.category.slug}-episode-${product.seri}`}>Xem</Link>
+															<Link prefetch={false} href={`/d/${anime.category.slug}-episode-${product.seri}`}>Xem</Link>
 														</Button>
 													)}
 												</div>
