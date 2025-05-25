@@ -17,7 +17,7 @@ const generateSitemapXML = async (): Promise<MetadataRoute.Sitemap> => {
 
   categorys?.data?.forEach((item) => {
     sitemap.push({
-      url: `${process.env.NEXT_PUBLIC_URL_SEO}/q/${item.slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/q/${item.slug}`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
@@ -25,7 +25,7 @@ const generateSitemapXML = async (): Promise<MetadataRoute.Sitemap> => {
 
     item.products.forEach((product) => {
       sitemap.push({
-        url: `${process.env.NEXT_PUBLIC_URL_SEO}/d/${product?.slug}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/d/${product?.slug}`,
         lastModified: new Date(),
         changeFrequency: "daily",
         priority: 0.8,
