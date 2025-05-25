@@ -5,13 +5,11 @@ import Image, { ImageProps } from 'next/image';
 
 type Props = Omit<ImageProps, 'src' | 'alt'> & {
 	src: string;
-	fallbackSrc?: string;
 	alt: string;
 };
 
 const MVImage = ({
 	src,
-	fallbackSrc,
 	alt,
 	className,
 	onError,
@@ -24,15 +22,23 @@ const MVImage = ({
 		onError?.(e);
 	};
 
-	return (
+	return hasError ? (
+		<img
+			src={src}
+			alt={alt}
+			className={className}
+			{...rest}
+		/>
+	) : (
 		<Image
-			src={hasError ? (fallbackSrc || src) : src}
+			src={src}
 			alt={alt}
 			className={className}
 			onError={handleError}
 			{...rest}
 		/>
 	);
+
 };
 
 export default MVImage;
