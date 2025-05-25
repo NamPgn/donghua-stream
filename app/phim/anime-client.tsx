@@ -76,7 +76,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 						src={anime.linkImg}
 						alt={anime.name}
 						fill
-						className="object-cover brightness-[0.4]"
+						className="object-cover brightness-[0.4] w-full h-full"
 						priority
 					/>
 				</div>
