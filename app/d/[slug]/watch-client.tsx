@@ -72,7 +72,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 		<div className="min-h-screen bg-background">
 			<Wrapper>
 				<div className="flex items-center gap-2 mb-4">
-					<Link href={`/phim/${anime.category.slug}`}>
+					<Link href={`/q/${anime.category.slug}`}>
 						<Button variant="ghost" size="sm" className="gap-1 cursor-pointer">
 							<ArrowLeft className="h-4 w-4" />
 							Trở về Chi tiết
@@ -92,7 +92,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 										{prevEpisode && (
 											<Button variant="outline" size="sm" asChild>
 												<Link
-													href={`/xem-phim/${anime.category.slug}-episode-${prevEpisode}`}
+													href={`/d/${anime.category.slug}-episode-${prevEpisode}`}
 													className="flex items-center gap-1"
 												>
 													<ChevronLeft className="h-4 w-4" />
@@ -103,7 +103,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 										{nextEpisode && (
 											<Button variant="outline" size="sm" asChild>
 												<Link
-													href={`/xem-phim/${anime.category.slug}-episode-${nextEpisode}`}
+													href={`/d/${anime.category.slug}-episode-${nextEpisode}`}
 													className="flex items-center gap-1"
 												>
 													Tập sau
@@ -126,8 +126,8 @@ export function WatchClient({ anime }: { anime: Anime }) {
 													<Link
 														href={
 															anime.category.isMovie !== "drama"
-																? `/xem-phim/${anime.category.slug}`
-																: `/xem-phim/${anime.category.slug}-episode-${product.seri}`
+																? `/d/${anime.category.slug}`
+																: `/d/${anime.category.slug}-episode-${product.seri}`
 														}
 													>
 														{anime.category.isMovie !== "drama" ? "Full" : `Tập ${product.seri}`}
@@ -148,7 +148,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 										{prevEpisode && (
 											<Button variant="outline" size="sm" asChild>
 												<Link
-													href={`/xem-phim/${anime.category.slug}-episode-${prevEpisode}`}
+													href={`/d/${anime.category.slug}-episode-${prevEpisode}`}
 													className="flex items-center gap-1"
 												>
 													<ChevronLeft className="h-4 w-4" />
@@ -159,7 +159,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
 										{nextEpisode && (
 											<Button variant="outline" size="sm" asChild>
 												<Link
-													href={`/xem-phim/${anime.category.slug}-episode-${nextEpisode}`}
+													href={`/d/${anime.category.slug}-episode-${nextEpisode}`}
 													className="flex items-center gap-1"
 												>
 													Tập sau
@@ -192,11 +192,11 @@ export function WatchClient({ anime }: { anime: Anime }) {
 													</div>
 													{anime.category.isMovie !== "drama" ? (
 														<Button size="sm" asChild disabled={!product.isApproved}>
-															<Link href={`/xem-phim/${anime.category.slug}`}>Xem</Link>
+															<Link href={`/d/${anime.category.slug}`}>Xem</Link>
 														</Button>
 													) : (
 														<Button size="sm" asChild disabled={!product.isApproved}>
-															<Link href={`/xem-phim/${anime.category.slug}-episode-${product.seri}`}>Xem</Link>
+															<Link href={`/d/${anime.category.slug}-episode-${product.seri}`}>Xem</Link>
 														</Button>
 													)}
 												</div>

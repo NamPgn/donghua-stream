@@ -44,7 +44,7 @@ export async function generateMetadata(
         images: [animeData.category.linkImg || '/og-image.jpg']
       },
       alternates: {
-        canonical: `/xem-phim/${slug}`
+        canonical: `/d/${slug}`
       }
     }
 }
