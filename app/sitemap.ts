@@ -1,12 +1,21 @@
 import { fetchCategorySitemap } from "@/services/anime.server";
 import type { MetadataRoute } from "next";
 
-const generateSitemapXML = async () => {
-  const categorys: any = await fetchCategorySitemap(); 
+interface Product {
+  slug: string;
+}
 
-  const sitemap: any[] = [];
+interface Category {
+  slug: string;
+  products: Product[];
+}
 
-  categorys?.data?.map((item: any) => {
+const generateSitemapXML = async (): Promise<MetadataRoute.Sitemap> => {
+  const categorys: { data: Category[] } = await fetchCategorySitemap(); 
+
+  const sitemap: MetadataRoute.Sitemap = [];
+
+  categorys?.data?.forEach((item) => {
     sitemap.push({
       url: `${process.env.NEXT_PUBLIC_URL_SEO}/q/${item.slug}`,
       lastModified: new Date(),
@@ -14,7 +23,7 @@ const generateSitemapXML = async () => {
       priority: 1,
     });
 
-    item.products.map((product: any) => {
+    item.products.forEach((product) => {
       sitemap.push({
         url: `${process.env.NEXT_PUBLIC_URL_SEO}/d/${product?.slug}`,
         lastModified: new Date(),
@@ -31,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const data = await generateSitemapXML();
     return data;
-  } catch (error) {
-    return [];
+  } catch {
+    return []
   }
 }
