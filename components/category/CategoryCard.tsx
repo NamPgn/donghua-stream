@@ -1,5 +1,5 @@
-import Image from "next/image"
 import Link from "next/link"
+import MVImage from "../ui/image";
 
 interface Category {
   _id: string;
@@ -24,7 +24,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
     <Link href={`/categories/${category.slug}`}>
       <div className="group relative overflow-hidden rounded-lg">
         <div className="aspect-[2/3] relative">
-          <Image
+          <MVImage
             src={category.linkImg}
             alt={category.name}
             fill

@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { animeData } from "@/lib/data"
-import Image from "next/image"
+import MVImage from "@/components/ui/image"
 
 export default function PopularPage() {
   // Sort animes by rating (highest first)
@@ -37,7 +37,7 @@ export default function PopularPage() {
                 <Link key={anime.id} href={`/phim/${anime.id}`} className="group">
                   <div className="relative h-[200px] rounded-lg overflow-hidden">
                     <div className="absolute inset-0">
-                      <Image
+                      <MVImage
                         src={anime.coverImage}
                         alt={anime.title}
                         className="w-full h-full object-cover transition-transform group-hover:scale-105"
@@ -98,7 +98,7 @@ export default function PopularPage() {
                           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                             <div className="font-medium text-muted-foreground w-5 text-center">{index + 1}</div>
                             <div className="relative h-16 w-12 overflow-hidden rounded">
-                              <Image
+                              <MVImage
                                 src={anime.image}
                                 alt={anime.title}
                                 className="w-full h-full object-cover"

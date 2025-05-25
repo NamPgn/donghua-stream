@@ -6,13 +6,13 @@ import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 import "swiper/css/effect-fade"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, ChevronRight, Play } from "lucide-react"
 import { useSlider } from "@/hooks/useSlider"
 import type { Poster } from "@/services/api/poster.api"
 import Link from "next/link"
+import MVImage from "./ui/image"
 
 export function FeaturedSlider() {
   const { data, isLoading, error } = useSlider()
@@ -44,7 +44,7 @@ export function FeaturedSlider() {
         {data.data.map((poster: Poster) => (
           <SwiperSlide key={poster._id}>
             <div className="aspect-[16/9] sm:aspect-[21/9] md:aspect-[21/7] w-full overflow-hidden ">
-              <Image
+              <MVImage
                 src={poster.poster}
                 alt={poster.name}
                 width={1600}

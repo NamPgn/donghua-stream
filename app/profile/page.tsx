@@ -1,10 +1,10 @@
 import Link from "next/link"
-import Image from "next/image"
 import { ArrowLeft, Settings, Heart, Clock, Calendar, Edit } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { animeData } from "@/lib/data"
+import MVImage from "@/components/ui/image"
 
 export default function ProfilePage() {
   // Mock user data
@@ -39,7 +39,7 @@ export default function ProfilePage() {
         {/* User Profile Header */}
         <div className="flex flex-col md:flex-row gap-6 items-start mb-8">
           <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-background shadow-lg">
-            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} fill className="object-cover" />
+            <MVImage src={user.avatar || "/placeholder.svg"} alt={user.name} fill className="object-cover" />
           </div>
           <div className="flex-1">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -127,7 +127,7 @@ export default function ProfilePage() {
                       className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
                     >
                       <div className="relative h-16 w-12 overflow-hidden rounded">
-                        <Image
+                        <MVImage
                           src={anime.image || "/placeholder.svg"}
                           alt={anime.title}
                           fill

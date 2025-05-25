@@ -1,10 +1,10 @@
 'use client'
 import Link from "next/link"
-import Image from "next/image"
 import { Clock, Calendar } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import MVImage from "./ui/image"
 
 interface AnimeProduct {
   _id: string;
@@ -39,7 +39,7 @@ export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
     <Card className="overflow-hidden h-full transition-all hover:shadow-md group">
       <Link href={`/phim/${anime.slug}`} prefetch={false}>
         <div className="relative aspect-[3/4] overflow-hidden">
-          <Image
+          <MVImage
             src={anime.linkImg || "/placeholder.svg"}
             alt={anime.name}
             fill

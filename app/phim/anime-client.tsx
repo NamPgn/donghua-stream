@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { ArrowLeft, Star, Calendar, Clock, Film, Globe, BarChart4 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Wrapper } from "@/components/wrapper"
+import MVImage from "@/components/ui/image"
 
 interface AnimeProduct {
 	_id: string
@@ -72,7 +72,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 			{/* Header with background image - Full width */}
 			<div className="relative h-[300px] md:h-[400px] w-full overflow-hidden">
 				<div className="absolute inset-0">
-					<Image
+					<MVImage
 						src={anime.linkImg}
 						alt={anime.name}
 						fill
@@ -90,7 +90,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 					</Link>
 					<div className="flex flex-col md:flex-row gap-6 items-start">
 						<div className="relative h-[180px] w-[120px] md:h-[240px] md:w-[160px] rounded-lg overflow-hidden shadow-lg">
-							<Image
+							<MVImage
 								src={anime.linkImg || "/placeholder.svg"}
 								alt={anime.name}
 								fill
