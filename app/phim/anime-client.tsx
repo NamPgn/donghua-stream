@@ -139,8 +139,8 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								<Button asChild>
 									{
 										anime?.isMovie === 'drama' ?
-											<Link href={`/d/${anime.slug}-episode-${anime.products[0].seri}`}>Xem ngay</Link> :
-											<Link href={`/d/${anime.slug}`}>Xem ngay</Link>
+											<Link href={`/xem-phim/${anime.slug}-episode-${anime.products[0].seri}`}>Xem ngay</Link> :
+											<Link href={`/xem-phim/${anime.slug}`}>Xem ngay</Link>
 									}
 								</Button>
 								<Button variant="outline">Thêm vào danh sách</Button>
@@ -231,7 +231,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 											</div>
 											<Button size="sm" asChild disabled={!product.isApproved}>
 												{
-													anime.isMovie === 'drama' ? <Link href={`/d/${anime.slug}-episode-${product.seri}`}>Xem</Link> : <Link href={`/d/${anime.slug}`}>Xem</Link>
+													anime.isMovie === 'drama' ? <Link href={`/xem-phim/${anime.slug}-episode-${product.seri}`}>Xem</Link> : <Link href={`/xem-phim/${anime.slug}`}>Xem</Link>
 												}
 											</Button>
 										</div>

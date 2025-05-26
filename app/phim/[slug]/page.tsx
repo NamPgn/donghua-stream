@@ -2,8 +2,8 @@ import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { AnimeClient } from "../anime-client"
 import { getAnimeData } from "@/services/anime.server";
-import NominatedFilm from "@/app/d/_components/NominatedFilm";
 import { Wrapper } from "@/components/wrapper";
+import NominatedFilm from "@/app/xem-phim/_components/NominatedFilm";
 
 type tParams = Promise<{ slug: string }>;
 export async function generateMetadata(
@@ -47,7 +47,7 @@ export async function generateMetadata(
         creator: '@your_twitter_handle'
       },
       alternates: {
-        canonical: `/q/${slug}`
+        canonical: `/phim/${slug}`
       }
     }
 }

@@ -83,7 +83,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
     <div className="min-h-screen bg-background">
       <Wrapper>
         <div className="flex items-center gap-2 mb-4">
-          <Link href={`/q/${anime.category.slug}`} prefetch={false}>
+          <Link href={`/phim/${anime.category.slug}`} prefetch={false}>
             <Button variant="ghost" size="sm" className="gap-1 cursor-pointer">
               <ArrowLeft className="h-4 w-4" />
               Trở về Chi tiết
@@ -105,7 +105,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                     {prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <Link
-                          href={`/d/${anime.category.slug}-episode-${prevEpisode}`}
+                          href={`/xem-phim/${anime.category.slug}-episode-${prevEpisode}`}
 						  prefetch={false}
                           className="flex items-center gap-1"
                         >
@@ -117,7 +117,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                     {nextEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <Link
-                          href={`/d/${anime.category.slug}-episode-${nextEpisode}`}
+                          href={`/xem-phim/${anime.category.slug}-episode-${nextEpisode}`}
                           className="flex items-center gap-1"
                           prefetch={false}
                         >
@@ -146,8 +146,8 @@ export function WatchClient({ anime }: { anime: Anime }) {
                             <Link
                               href={
                                 anime.category.isMovie !== "drama"
-                                  ? `/d/${anime.category.slug}`
-                                  : `/d/${anime.category.slug}-episode-${product.seri}`
+                                  ? `/xem-phim/${anime.category.slug}`
+                                  : `/xem-phim/${anime.category.slug}-episode-${product.seri}`
                               }
                               prefetch={false}
                             >
@@ -175,7 +175,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                       <Button variant="outline" size="sm" asChild>
                         <Link
                           prefetch={false}
-                          href={`/d/${anime.category.slug}-episode-${prevEpisode}`}
+                          href={`/xem-phim/${anime.category.slug}-episode-${prevEpisode}`}
                           className="flex items-center gap-1"
                         >
                           <ChevronLeft className="h-4 w-4" />
@@ -187,7 +187,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                       <Button variant="outline" size="sm" asChild>
                         <Link
                           prefetch={false}
-                          href={`/d/${anime.category.slug}-episode-${nextEpisode}`}
+                          href={`/xem-phim/${anime.category.slug}-episode-${nextEpisode}`}
                           className="flex items-center gap-1"
                         >
                           Tập sau
@@ -231,7 +231,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                               >
                                 <Link
                                   prefetch={false}
-                                  href={`/d/${anime.category.slug}`}
+                                  href={`/xem-phim/${anime.category.slug}`}
                                 >
                                   Xem
                                 </Link>
@@ -244,7 +244,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                               >
                                 <Link
                                   prefetch={false}
-                                  href={`/d/${anime.category.slug}-episode-${product.seri}`}
+                                  href={`/xem-phim/${anime.category.slug}-episode-${product.seri}`}
                                 >
                                   Xem
                                 </Link>
