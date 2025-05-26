@@ -67,7 +67,7 @@ export function FeaturedSlider() {
                   </p>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
                     <MVLink href={`${poster.link}`}>
-                      <Button size="sm" className="gap-2 text-xs sm:text-sm">
+                      <Button size="sm" className="gap-2 text-xs sm:text-sm cursor-pointer">
                         <Play className="h-3 w-3 sm:h-4 sm:w-4" />
                         Xem ngay
                       </Button>

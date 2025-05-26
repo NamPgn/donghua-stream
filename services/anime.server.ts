@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation"
+import { API_BASE_URL, API_ENDPOINTS, CACHE_SETTINGS, DEFAULT_HEADERS, ERROR_MESSAGES, TIMEOUT } from "../constant"
 
 export async function getAnimeData(slug: string) {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/category/${slug}`, {
-            cache: "no-cache",
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.CATEGORY}/${slug}`, {
+            cache: CACHE_SETTINGS.NO_CACHE,
+            headers: DEFAULT_HEADERS,
         })
 
         if (!res.ok) {
@@ -17,7 +16,7 @@ export async function getAnimeData(slug: string) {
         const data = await res.json()
 
         if (!data) {
-            console.error('No data received from API')
+            console.error(ERROR_MESSAGES.NO_DATA)
             return null
         }
 
@@ -30,11 +29,9 @@ export async function getAnimeData(slug: string) {
 
 export async function getAnimeEpisode(slug: string) {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/${slug}`, {
-            cache: "no-cache",
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.PRODUCT}/${slug}`, {
+            cache: CACHE_SETTINGS.NO_CACHE,
+            headers: DEFAULT_HEADERS,
         })
 
         if (!res.ok) {
@@ -45,7 +42,7 @@ export async function getAnimeEpisode(slug: string) {
         const data = await res.json()
 
         if (!data) {
-            console.error('No data received from API')
+            console.error(ERROR_MESSAGES.NO_DATA)
             return null
         }
 
@@ -62,11 +59,11 @@ export async function getCategoryNominated(seriesId: string, categoryId: string)
         if (seriesId) queryParams.append('seriesId', seriesId);
         if (categoryId) queryParams.append('categoryId', categoryId);
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories/nominated?${queryParams}`,
+            `${API_BASE_URL}${API_ENDPOINTS.CATEGORIES_NOMINATED}?${queryParams}`,
             {
                 method: "GET",
                 next: {
-                    revalidate: 3600
+                    revalidate: CACHE_SETTINGS.REVALIDATE_3600
                 }
             }
         );
@@ -77,18 +74,18 @@ export async function getCategoryNominated(seriesId: string, categoryId: string)
         return data;
     } catch (error) {
         console.error('Error fetching category nominated:', error);
-        return { data: [], error: "Failed to fetch category nominated" };
+        return { data: [], error: ERROR_MESSAGES.CATEGORY_NOMINATED_FAILED };
     }
 }
 
 export async function fetchCategorySitemap() {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/categorys/sitemap`,
+        `${API_BASE_URL}${API_ENDPOINTS.CATEGORY_SITEMAP}`,
         {
           method: "GET",
-          cache: "no-cache",
-          signal: AbortSignal.timeout(10000)
+          cache: CACHE_SETTINGS.NO_CACHE,
+          signal: AbortSignal.timeout(TIMEOUT.DEFAULT)
         }
       );
       if (!response.ok) {
@@ -99,8 +96,8 @@ export async function fetchCategorySitemap() {
     } catch (error: any) {
       console.error('Error fetching category sitemap:', error);
       if (error.name === 'AbortError') {
-        return { data: [], error: "Request timeout" };
+        return { data: [], error: ERROR_MESSAGES.REQUEST_TIMEOUT };
       }
-      return { data: [], error: "Failed to fetch category sitemap" };
+      return { data: [], error: ERROR_MESSAGES.CATEGORY_SITEMAP_FAILED };
     }
   }

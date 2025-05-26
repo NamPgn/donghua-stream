@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { animeData } from "@/lib/data"
 import MVImage from "@/components/ui/image"
 import MVLink from "@/components/Link"
+import { ANIME_PATHS } from "@/constant/path.constant"
 
 export default function PopularPage() {
   // Sort animes by rating (highest first)
@@ -34,7 +35,7 @@ export default function PopularPage() {
             <h2 className="text-2xl font-bold mb-6">最受欢迎 Top Rated</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {popularAnimes.slice(0, 3).map((anime, index) => (
-                <MVLink key={anime.id} href={`/phim/${anime.id}`} className="group">
+                <MVLink key={anime.id} href={`${ANIME_PATHS.BASE}/${anime.id}`} className="group">
                   <div className="relative h-[200px] rounded-lg overflow-hidden">
                     <div className="absolute inset-0">
                       <MVImage
@@ -94,7 +95,7 @@ export default function PopularPage() {
                     </div>
                     <div className="space-y-3">
                       {categoryAnimes.map((anime, index) => (
-                        <MVLink key={anime.id} href={`/phim/${anime.id}`}>
+                        <MVLink key={anime.id} href={`${ANIME_PATHS.BASE}/${anime.id}`}>
                           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                             <div className="font-medium text-muted-foreground w-5 text-center">{index + 1}</div>
                             <div className="relative h-16 w-12 overflow-hidden rounded">

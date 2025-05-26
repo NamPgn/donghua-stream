@@ -4,6 +4,7 @@ import { AnimeClient } from "../anime-client"
 import { getAnimeData } from "@/services/anime.server";
 import { Wrapper } from "@/components/wrapper";
 import NominatedFilm from "@/app/xem-phim/_components/NominatedFilm";
+import { ANIME_PATHS } from "@/constant/path.constant";
 
 type tParams = Promise<{ slug: string }>;
 export async function generateMetadata(
@@ -47,7 +48,7 @@ export async function generateMetadata(
         creator: '@your_twitter_handle'
       },
       alternates: {
-        canonical: `/phim/${slug}`
+        canonical: `${ANIME_PATHS.BASE}/${slug}`
       }
     }
 }

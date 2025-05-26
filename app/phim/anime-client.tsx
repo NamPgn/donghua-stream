@@ -11,6 +11,8 @@ import MVImage from "@/components/ui/image"
 import { useState } from "react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import MVLink from "@/components/Link"
+import { ANIME_PATHS } from "@/constant/path.constant"
+import { SOCIAL_LINKS } from "@/constant/social.constant"
 
 interface AnimeProduct {
 	_id: string
@@ -62,6 +64,7 @@ interface Anime {
 	updatedAt: string
 	latestProductUploadDate: string
 	relatedSeasons: string
+	zaloGroupLink?: string
 }
 
 interface AnimeClientProps {
@@ -135,15 +138,21 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 									<span>{anime.quality}</span>
 								</div>
 							</div>
-							<div className="flex gap-3 justify-center md:justify-start">
+							<div className="flex flex-wrap gap-3 md:justify-start justify-center w-full">
 								<Button asChild>
 									{
 										anime?.isMovie === 'drama' ?
-											<MVLink href={`/xem-phim/${anime.slug}-episode-${anime.products[0].seri}`}>Xem ngay</MVLink> :
-											<MVLink href={`/xem-phim/${anime.slug}`}>Xem ngay</MVLink>
+											<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}-episode-${anime?.products[0]?.seri}`}>Xem ngay</MVLink> :
+											<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}`}>Xem ngay</MVLink>
 									}
 								</Button>
 								<Button variant="outline">Thêm vào danh sách</Button>
+								<Button variant="outline" asChild className="cursor-pointer">
+									<a href={SOCIAL_LINKS.ZALO} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+										<img src="/7044033_zalo_icon.svg" alt="Zalo" className="w-5 h-5" />
+										<span className="whitespace-nowrap">Tham gia nhóm Zalo</span>
+									</a>
+								</Button>
 							</div>
 						</div>
 					</div>
@@ -231,7 +240,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 											</div>
 											<Button size="sm" asChild disabled={!product.isApproved}>
 												{
-													anime.isMovie === 'drama' ? <MVLink href={`/xem-phim/${anime.slug}-episode-${product.seri}`}>Xem</MVLink> : <MVLink href={`/xem-phim/${anime.slug}`}>Xem</MVLink>
+													anime.isMovie === 'drama' ? <MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}-episode-${product.seri}`}>Xem</MVLink> : <MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}`}>Xem</MVLink>
 												}
 											</Button>
 										</div>

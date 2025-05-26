@@ -1,4 +1,5 @@
 import { baseApi } from './base.api';
+import { API_ENDPOINTS } from '../../constant/api.constant';
 
 export interface Poster {
   _id: string;
@@ -24,10 +25,10 @@ export interface PosterResponse {
 
 export const posterApi = {
   getAll: async (): Promise<PosterResponse> => {
-    return baseApi.get<PosterResponse>('/poster');
+    return baseApi.get<PosterResponse>(API_ENDPOINTS.POSTER.BASE);
   },
 
   getById: async (id: string): Promise<Poster> => {
-    return baseApi.get<Poster>(`/poster/${id}`);
+    return baseApi.get<Poster>(`${API_ENDPOINTS.POSTER.BASE}/${id}`);
   }
 }; 

@@ -1,3 +1,4 @@
+import { ANIME_PATHS } from "@/constant/path.constant";
 import { fetchCategorySitemap } from "@/services/anime.server";
 import type { MetadataRoute } from "next";
 
@@ -17,7 +18,7 @@ const generateSitemapXML = async (): Promise<MetadataRoute.Sitemap> => {
 
   categorys?.data?.forEach((item) => {
     sitemap.push({
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/phim/${item.slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}${ANIME_PATHS.BASE}/${item.slug}`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 1,
@@ -25,7 +26,7 @@ const generateSitemapXML = async (): Promise<MetadataRoute.Sitemap> => {
 
     // item.products.forEach((product) => {
     //   sitemap.push({
-    //     url: `${process.env.NEXT_PUBLIC_SITE_URL}/xem-phim/${product?.slug}`,
+    //     url: `${process.env.NEXT_PUBLIC_SITE_URL}ANIME_PATHS.WATCH/${product?.slug}`,
     //     lastModified: new Date(),
     //     changeFrequency: "daily",
     //     priority: 0.8,

@@ -1,18 +1,17 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { API_BASE_URL, DEFAULT_HEADERS, TIMEOUT, ERROR_MESSAGES, HTTP_STATUS, AUTH } from '../../constant';
 
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001/api',
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: API_BASE_URL,
+  timeout: TIMEOUT.DEFAULT,
+  headers: DEFAULT_HEADERS,
 });
 
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(AUTH.TOKEN_KEY);
     if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `${AUTH.AUTH_HEADER_PREFIX} ${token}`;
     }
     return config;
   },
@@ -28,24 +27,24 @@ api.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response) {
       switch (error.response.status) {
-        case 401:
-          localStorage.removeItem('token');
-          window.location.href = '/login';
+        case HTTP_STATUS.UNAUTHORIZED:
+          localStorage.removeItem(AUTH.TOKEN_KEY);
+          window.location.href = AUTH.LOGIN_PATH;
           break;
-        case 403:
-          console.error('Access forbidden');
+        case HTTP_STATUS.FORBIDDEN:
+          console.error(ERROR_MESSAGES.ACCESS_FORBIDDEN);
           break;
-        case 404:
-          console.error('Resource not found');
+        case HTTP_STATUS.NOT_FOUND:
+          console.error(ERROR_MESSAGES.RESOURCE_NOT_FOUND);
           break;
-        case 500:
-          console.error('Server error');
+        case HTTP_STATUS.SERVER_ERROR:
+          console.error(ERROR_MESSAGES.SERVER_ERROR);
           break;
         default:
-          console.error('An error occurred');
+          console.error(ERROR_MESSAGES.GENERAL_ERROR);
       }
     } else if (error.request) {
-      console.error('Network error - no response received');
+      console.error(ERROR_MESSAGES.NETWORK_ERROR);
     } else {
       console.error('Error:', error.message);
     }

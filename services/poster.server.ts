@@ -1,3 +1,5 @@
+import { API_BASE_URL, API_ENDPOINTS, CACHE_SETTINGS, DEFAULT_HEADERS, ERROR_MESSAGES } from "../constant"
+
 export interface Poster {
   _id: string;
   name: string;
@@ -20,21 +22,17 @@ export interface PosterResponse {
   };
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8001/api';
-
 export async function fetchPosters(): Promise<PosterResponse> {
-  const response = await fetch(`${API_URL}/poster`, {
+  const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.POSTER}`, {
     next: {
-      revalidate: 15,
+      revalidate: CACHE_SETTINGS.REVALIDATE_15,
       tags: ['posters']
     },
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: DEFAULT_HEADERS,
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch posters');
+    throw new Error(ERROR_MESSAGES.POSTER_FETCH_FAILED);
   }
 
   return response.json();
@@ -42,14 +40,12 @@ export async function fetchPosters(): Promise<PosterResponse> {
 
 export async function getPosterData(id: string) {
   try {
-    const res = await fetch(`${API_URL}/poster/${id}`, {
+    const res = await fetch(`${API_BASE_URL}${API_ENDPOINTS.POSTER}/${id}`, {
       next: {
-        revalidate: 15, // Cache for 1 hour
-        tags: [`poster-${id}`] // Add tag for manual revalidation if needed
+        revalidate: CACHE_SETTINGS.REVALIDATE_15,
+        tags: [`poster-${id}`]
       },
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: DEFAULT_HEADERS,
     });
 
     if (!res.ok) {
@@ -60,7 +56,7 @@ export async function getPosterData(id: string) {
     const data = await res.json();
 
     if (!data) {
-      console.error('No data received from API');
+      console.error(ERROR_MESSAGES.NO_DATA);
       return null;
     }
 

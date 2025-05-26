@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { Metadata } from "next"
 import { WatchClient } from "./watch-client"
 import { getAnimeEpisode } from "@/services/anime.server"
+import { ANIME_PATHS } from "@/constant/path.constant";
 
 type tParams = Promise<{ slug: string }>;
 
@@ -44,7 +45,7 @@ export async function generateMetadata(
         images: [animeData.category.linkImg || '/og-image.jpg']
       },
       alternates: {
-        canonical: `/xem-phim/${slug}`
+        canonical: `${ANIME_PATHS.WATCH}/${slug}`
       }
     }
 }
