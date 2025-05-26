@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { ArrowLeft, Search, Filter } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -14,6 +13,7 @@ import { animeData } from "@/lib/data"
 import { useSearchAnime } from "@/hooks/useAnime"
 import type { Anime } from "@/services/api/anime.api"
 import { Wrapper } from "@/components/wrapper"
+import MVLink from "@/components/Link"
 
 // Get all unique categories
 const getAllCategories = () => {
@@ -68,12 +68,12 @@ export default function SearchPage() {
     <div className="min-h-screen bg-background">
       <Wrapper>
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/">
+          <MVLink href="/">
             <Button variant="ghost" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" />
               Quay lại
             </Button>
-          </Link>
+          </MVLink>
           <h1 className="text-3xl font-bold">Tìm kiếm</h1>
         </div>
 

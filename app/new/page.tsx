@@ -1,8 +1,8 @@
-import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { animeData } from "@/lib/data"
+import MVLink from "@/components/Link"
 
 export default function NewReleasesPage() {
   // Sort animes by release date (newest first)
@@ -16,12 +16,12 @@ export default function NewReleasesPage() {
 
       <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/">
+          <MVLink href="/">
             <Button variant="ghost" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" />
               返回 Back
             </Button>
-          </Link>
+          </MVLink>
           <h1 className="text-3xl font-bold">最新更新 New Releases</h1>
         </div>
 

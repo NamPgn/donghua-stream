@@ -1,10 +1,10 @@
-import Link from "next/link"
 import { ArrowLeft, Settings, Heart, Clock, Calendar, Edit } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { animeData } from "@/lib/data"
 import MVImage from "@/components/ui/image"
+import MVLink from "@/components/Link"
 
 export default function ProfilePage() {
   // Mock user data
@@ -27,12 +27,12 @@ export default function ProfilePage() {
  
       <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/">
+          <MVLink href="/">
             <Button variant="ghost" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" />
               返回 Back
             </Button>
-          </Link>
+          </MVLink>
           <h1 className="text-3xl font-bold">个人资料 Profile</h1>
         </div>
 
@@ -103,7 +103,7 @@ export default function ProfilePage() {
                   <h3 className="text-lg font-medium mb-2">还没有收藏动漫</h3>
                   <p className="text-muted-foreground mb-4">浏览动漫并点击收藏按钮将它们添加到这里</p>
                   <Button asChild>
-                    <Link href="/">浏览动漫 Browse Anime</Link>
+                    <MVLink href="/">浏览动漫 Browse Anime</MVLink>
                   </Button>
                 </div>
               )}
@@ -148,7 +148,7 @@ export default function ProfilePage() {
                   <h3 className="text-lg font-medium mb-2">还没有观看历史</h3>
                   <p className="text-muted-foreground mb-4">开始观看动漫，您的历史记录将显示在这里</p>
                   <Button asChild>
-                    <Link href="/">浏览动漫 Browse Anime</Link>
+                    <MVLink href="/">浏览动漫 Browse Anime</MVLink>
                   </Button>
                 </div>
               )}

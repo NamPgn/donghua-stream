@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { ArrowLeft, Star, Calendar, Clock, Film, Globe, BarChart4, ChevronUp, ChevronDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -11,6 +10,7 @@ import { Wrapper } from "@/components/wrapper"
 import MVImage from "@/components/ui/image"
 import { useState } from "react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import MVLink from "@/components/Link"
 
 interface AnimeProduct {
 	_id: string
@@ -85,13 +85,13 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 				</div>
 				<div className="absolute inset-0 bg-gradient-to-t from-background md:via-background/50 via-background/0 to-transparent h-[500px] md:h-[400px]" />
 				<div className="container relative h-[500px] md:h-[400px] flex flex-col justify-end pb-8 mx-auto">
-					<Link href="/" className="absolute top-4 left-3 md:left-0 md:top-8">
+					<MVLink href="/" className="absolute top-4 left-3 md:left-0 md:top-8">
 						<Button variant="outline" size="sm" className="gap-1 bg-background/80 backdrop-blur-sm cursor-pointer">
 							<ArrowLeft className="h-4 w-4" />
 							<span className="hidden sm:inline">Trở về Trang chủ</span>
 							<span className="sm:hidden">Trở về</span>
 						</Button>
-					</Link>
+					</MVLink>
 					<div className="flex flex-col md:flex-row gap-6 items-start mt-auto md:mt-0">
 						<div className="relative h-[200px] w-[140px] md:h-[240px] md:w-[160px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
 							<MVImage
@@ -139,8 +139,8 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								<Button asChild>
 									{
 										anime?.isMovie === 'drama' ?
-											<Link href={`/xem-phim/${anime.slug}-episode-${anime.products[0].seri}`}>Xem ngay</Link> :
-											<Link href={`/xem-phim/${anime.slug}`}>Xem ngay</Link>
+											<MVLink href={`/xem-phim/${anime.slug}-episode-${anime.products[0].seri}`}>Xem ngay</MVLink> :
+											<MVLink href={`/xem-phim/${anime.slug}`}>Xem ngay</MVLink>
 									}
 								</Button>
 								<Button variant="outline">Thêm vào danh sách</Button>
@@ -231,7 +231,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 											</div>
 											<Button size="sm" asChild disabled={!product.isApproved}>
 												{
-													anime.isMovie === 'drama' ? <Link href={`/xem-phim/${anime.slug}-episode-${product.seri}`}>Xem</Link> : <Link href={`/xem-phim/${anime.slug}`}>Xem</Link>
+													anime.isMovie === 'drama' ? <MVLink href={`/xem-phim/${anime.slug}-episode-${product.seri}`}>Xem</MVLink> : <MVLink href={`/xem-phim/${anime.slug}`}>Xem</MVLink>
 												}
 											</Button>
 										</div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
+import MVLink from '@/components/Link';
 
 export default function Error({
   error,
@@ -34,12 +34,12 @@ export default function Error({
             Try Again
           </button>
           
-          <Link
+          <MVLink
             href="/"
             className="block w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors"
           >
             Return to Homepage
-          </Link>
+          </MVLink>
         </div>
 
         <div className="mt-8 text-sm text-gray-500">

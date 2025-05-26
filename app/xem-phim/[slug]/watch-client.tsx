@@ -3,7 +3,6 @@
 import type React from "react";
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -17,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VideoPlayer } from "@/components/video-player";
 import { Wrapper } from "@/components/wrapper";
+import MVLink from "@/components/Link";
 
 interface Product {
   _id: string;
@@ -83,12 +83,12 @@ export function WatchClient({ anime }: { anime: Anime }) {
     <div className="min-h-screen bg-background">
       <Wrapper>
         <div className="flex items-center gap-2 mb-4">
-          <Link href={`/phim/${anime.category.slug}`} prefetch={false}>
+          <MVLink href={`/phim/${anime.category.slug}`} >
             <Button variant="ghost" size="sm" className="gap-1 cursor-pointer">
               <ArrowLeft className="h-4 w-4" />
               Trở về Chi tiết
             </Button>
-          </Link>
+          </MVLink>
         </div>
 
         <div className="container mx-auto py-6 space-y-6 md:space-y-8">
@@ -104,26 +104,24 @@ export function WatchClient({ anime }: { anime: Anime }) {
                   <div className="flex gap-2 mb-3">
                     {prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
-                        <Link
+                        <MVLink
                           href={`/xem-phim/${anime.category.slug}-episode-${prevEpisode}`}
-						  prefetch={false}
                           className="flex items-center gap-1"
                         >
                           <ChevronLeft className="h-4 w-4" />
                           Tập trước
-                        </Link>
+                        </MVLink>
                       </Button>
                     )}
                     {nextEpisode && (
                       <Button variant="outline" size="sm" asChild>
-                        <Link
+                        <MVLink
                           href={`/xem-phim/${anime.category.slug}-episode-${nextEpisode}`}
                           className="flex items-center gap-1"
-                          prefetch={false}
                         >
                           Tập sau
                           <ChevronRight className="h-4 w-4" />
-                        </Link>
+                        </MVLink>
                       </Button>
                     )}
                   </div>
@@ -143,18 +141,18 @@ export function WatchClient({ anime }: { anime: Anime }) {
                             disabled={!product.isApproved}
                             asChild
                           >
-                            <Link
+                            <MVLink
                               href={
                                 anime.category.isMovie !== "drama"
                                   ? `/xem-phim/${anime.category.slug}`
                                   : `/xem-phim/${anime.category.slug}-episode-${product.seri}`
                               }
-                              prefetch={false}
+
                             >
                               {anime.category.isMovie !== "drama"
                                 ? "Full"
                                 : `Tập ${product.seri}`}
-                            </Link>
+                            </MVLink>
                           </Button>
                         )
                       )}
@@ -173,26 +171,26 @@ export function WatchClient({ anime }: { anime: Anime }) {
                   <div className="flex gap-2">
                     {prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
-                        <Link
-                          prefetch={false}
+                        <MVLink
+
                           href={`/xem-phim/${anime.category.slug}-episode-${prevEpisode}`}
                           className="flex items-center gap-1"
                         >
                           <ChevronLeft className="h-4 w-4" />
                           Tập trước
-                        </Link>
+                        </MVLink>
                       </Button>
                     )}
                     {nextEpisode && (
                       <Button variant="outline" size="sm" asChild>
-                        <Link
-                          prefetch={false}
+                        <MVLink
+
                           href={`/xem-phim/${anime.category.slug}-episode-${nextEpisode}`}
                           className="flex items-center gap-1"
                         >
                           Tập sau
                           <ChevronRight className="h-4 w-4" />
-                        </Link>
+                        </MVLink>
                       </Button>
                     )}
                   </div>
@@ -229,12 +227,12 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                 asChild
                                 disabled={!product.isApproved}
                               >
-                                <Link
-                                  prefetch={false}
+                                <MVLink
+
                                   href={`/xem-phim/${anime.category.slug}`}
                                 >
                                   Xem
-                                </Link>
+                                </MVLink>
                               </Button>
                             ) : (
                               <Button
@@ -242,12 +240,12 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                 asChild
                                 disabled={!product.isApproved}
                               >
-                                <Link
-                                  prefetch={false}
+                                <MVLink
+
                                   href={`/xem-phim/${anime.category.slug}-episode-${product.seri}`}
                                 >
                                   Xem
-                                </Link>
+                                </MVLink>
                               </Button>
                             )}
                           </div>

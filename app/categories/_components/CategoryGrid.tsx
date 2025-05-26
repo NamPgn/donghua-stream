@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { useSeriesBySlug } from "@/hooks/useSeries";
 import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { CategoryCard } from "@/components/category/CategoryCard";
+import MVLink from "@/components/Link";
 
 interface Category {
   _id: string;
@@ -30,12 +30,12 @@ export function CategoryGrid({ category }: CategoryGridProps) {
   return (
     <>
       <div className="flex items-center gap-2 mb-6">
-        <Link href="/categories">
+        <MVLink href="/categories">
           <Button variant="ghost" size="sm" className="gap-1">
             <ArrowLeft className="h-4 w-4" />
             Quay lại danh mục
           </Button>
-        </Link>
+        </MVLink>
         <h1 className="text-3xl font-bold">Thể Loại {seriesByCategory?.data.name}</h1>
       </div>
 

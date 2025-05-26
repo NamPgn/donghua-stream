@@ -11,8 +11,8 @@ import { Badge } from "@/components/ui/badge"
 import { ChevronLeft, ChevronRight, Play } from "lucide-react"
 import { useSlider } from "@/hooks/useSlider"
 import type { Poster } from "@/services/api/poster.api"
-import Link from "next/link"
 import MVImage from "./ui/image"
+import MVLink from "./Link"
 
 export function FeaturedSlider() {
   const { data, isLoading, error } = useSlider()
@@ -66,12 +66,12 @@ export function FeaturedSlider() {
                     {poster.descriptions}
                   </p>
                   <div className="flex flex-wrap gap-2 sm:gap-3">
-                    <Link href={`${poster.link}`}>
+                    <MVLink href={`${poster.link}`}>
                       <Button size="sm" className="gap-2 text-xs sm:text-sm">
                         <Play className="h-3 w-3 sm:h-4 sm:w-4" />
                         Xem ngay
                       </Button>
-                    </Link>
+                    </MVLink>
                     <Button
                       variant="outline"
                       size="sm"

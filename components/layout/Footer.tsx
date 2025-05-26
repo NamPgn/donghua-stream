@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { Facebook, Send, Music, MessageCircle } from 'lucide-react';
+import MVLink from '../Link';
 
 export const socialLinks = {
   facebook: 'https://www.facebook.com/phanhhh3d',
@@ -26,7 +26,7 @@ export default function Footer() {
               {Object.entries(socialLinks).map(([key, url]) => {
                 const Icon = socialIcons[key as keyof typeof socialIcons];
                 return (
-                  <Link 
+                  <MVLink 
                     key={key}
                     href={url} 
                     target="_blank" 
@@ -34,7 +34,7 @@ export default function Footer() {
                     className="hover:text-primary"
                   >
                     <Icon className="w-4 h-4" />
-                  </Link>
+                  </MVLink>
                 );
               })}
             </div>

@@ -1,12 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Search, Menu, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState, useCallback } from 'react';
 import debounce from 'lodash/debounce';
+import MVLink from '../Link';
 
 const navigation = [
   { name: 'Trang chủ', href: '/' },
@@ -53,12 +53,12 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Desktop Navigation */}
           <div className="flex items-center gap-4 md:gap-8">
-            <Link href="/" className="text-xl md:text-2xl font-bold">
+            <MVLink href="/" className="text-xl md:text-2xl font-bold">
               HH3D
-            </Link>
+            </MVLink>
             <nav className="hidden md:flex gap-6">
               {navigation.map((item) => (
-                <Link
+                <MVLink
                   key={item.href}
                   href={item.href}
                   className={`text-sm font-medium transition-colors hover:text-primary ${
@@ -66,7 +66,7 @@ export default function Header() {
                   }`}
                 >
                   {item.name}
-                </Link>
+                </MVLink>
               ))}
             </nav>
           </div>
@@ -83,7 +83,7 @@ export default function Header() {
               />
             </form>
             <Button variant="ghost" asChild>
-              <Link href="/profile">Profile</Link>
+              <MVLink href="/profile">Profile</MVLink>
             </Button>
           </div>
 
@@ -132,7 +132,7 @@ export default function Header() {
           <div className="md:hidden border-t">
             <nav className="flex flex-col py-4">
               {navigation.map((item) => (
-                <Link
+                <MVLink
                   key={item.href}
                   href={item.href}
                   className={`px-4 py-2 text-sm font-medium transition-colors hover:text-primary ${
@@ -141,15 +141,15 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
-                </Link>
+                </MVLink>
               ))}
-              <Link
+              <MVLink
                 href="/profile"
                 className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Profile
-              </Link>
+              </MVLink>
             </nav>
           </div>
         )}

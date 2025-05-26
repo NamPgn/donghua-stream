@@ -1,9 +1,9 @@
-import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { animeData } from "@/lib/data"
 import MVImage from "@/components/ui/image"
+import MVLink from "@/components/Link"
 
 export default function PopularPage() {
   // Sort animes by rating (highest first)
@@ -15,12 +15,12 @@ export default function PopularPage() {
 
       <main className="container py-8 mx-auto px-2 md:px-0">
         <div className="flex items-center gap-2 mb-6">
-          <Link href="/">
+          <MVLink href="/">
             <Button variant="ghost" size="sm" className="gap-1">
               <ArrowLeft className="h-4 w-4" />
              Back
             </Button>
-          </Link>
+          </MVLink>
           <h1 className="text-3xl font-bold"> Popular Anime</h1>
         </div>
 
@@ -34,7 +34,7 @@ export default function PopularPage() {
             <h2 className="text-2xl font-bold mb-6">最受欢迎 Top Rated</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {popularAnimes.slice(0, 3).map((anime, index) => (
-                <Link key={anime.id} href={`/phim/${anime.id}`} className="group">
+                <MVLink key={anime.id} href={`/phim/${anime.id}`} className="group">
                   <div className="relative h-[200px] rounded-lg overflow-hidden">
                     <div className="absolute inset-0">
                       <MVImage
@@ -60,7 +60,7 @@ export default function PopularPage() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </MVLink>
               ))}
             </div>
           </section>
@@ -88,13 +88,13 @@ export default function PopularPage() {
                   <div key={category}>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-xl font-semibold">{category}</h3>
-                      <Link href={`/categories/${category}`} className="text-sm text-primary hover:underline">
+                      <MVLink href={`/categories/${category}`} className="text-sm text-primary hover:underline">
                         查看全部 View All
-                      </Link>
+                      </MVLink>
                     </div>
                     <div className="space-y-3">
                       {categoryAnimes.map((anime, index) => (
-                        <Link key={anime.id} href={`/phim/${anime.id}`}>
+                        <MVLink key={anime.id} href={`/phim/${anime.id}`}>
                           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                             <div className="font-medium text-muted-foreground w-5 text-center">{index + 1}</div>
                             <div className="relative h-16 w-12 overflow-hidden rounded">
@@ -112,7 +112,7 @@ export default function PopularPage() {
                               {anime.rating}
                             </div>
                           </div>
-                        </Link>
+                        </MVLink>
                       ))}
                     </div>
                   </div>

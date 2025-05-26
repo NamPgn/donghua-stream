@@ -1,9 +1,9 @@
 'use client'
-import Link from "next/link"
 import { ArrowRight, Flame } from "lucide-react"
 import { useAnimePopular } from "@/hooks/useAnime"
 import { AnimationCard } from "@/components/animation-card"
 import Loading from "@/app/loading"
+import MVLink from "@/components/Link"
 
 export function PopularAnime() {
   const { data: animePopular, isLoading } = useAnimePopular();
@@ -19,9 +19,9 @@ export function PopularAnime() {
           <Flame className="w-6 h-6 text-red-500" />
           Thịnh Hành
         </h2>
-        <Link href="/popular" className="flex items-center text-sm text-primary hover:underline">
+        <MVLink href="/popular" className="flex items-center text-sm text-primary hover:underline">
           View All <ArrowRight className="ml-1 h-4 w-4" />
-        </Link>
+        </MVLink>
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 md:gap-3">
         {animePopular?.data.slice(0, 12).map((anime) => (

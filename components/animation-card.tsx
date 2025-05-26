@@ -1,10 +1,10 @@
 'use client'
-import Link from "next/link"
 import { Clock, Calendar } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import MVImage from "./ui/image"
+import MVLink from "./Link"
 
 interface AnimeProduct {
   _id: string;
@@ -37,7 +37,7 @@ interface AnimationCardProps {
 export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
   return (
     <Card className="overflow-hidden h-full transition-all hover:shadow-md group">
-      <Link href={`/phim/${anime.slug}`} prefetch={false}>
+      <MVLink href={`/phim/${anime.slug}`} >
         <div className="relative aspect-[3/4] overflow-hidden">
           <MVImage
             src={anime.linkImg || "/placeholder.svg"}
@@ -81,12 +81,12 @@ export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
             </div>
           </div>
         </div>
-      </Link>
+      </MVLink>
       <CardContent className="p-2 sm:p-2.5">
-        <Link href={`/phim/${anime.slug}`} prefetch={false} className="hover:text-primary transition-colors">
+        <MVLink href={`/phim/${anime.slug}`}  className="hover:text-primary transition-colors">
           <h3 className="font-medium text-xs sm:text-sm line-clamp-1 mb-0.5">{anime.name}</h3>
           <p className="text-[10px] sm:text-[11px] text-muted-foreground line-clamp-1 mb-1 sm:mb-1.5">{anime.anotherName ? anime.anotherName : '?'}</p>
-        </Link>
+        </MVLink>
       </CardContent>
     </Card>
   )

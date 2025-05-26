@@ -1,4 +1,4 @@
-import Link from "next/link"
+import MVLink from "../Link";
 import MVImage from "../ui/image";
 
 interface Category {
@@ -21,7 +21,7 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
-    <Link href={`/categories/${category.slug}`}>
+    <MVLink href={`/categories/${category.slug}`}>
       <div className="group relative overflow-hidden rounded-lg">
         <div className="aspect-[2/3] relative">
           <MVImage
@@ -37,6 +37,6 @@ export function CategoryCard({ category }: CategoryCardProps) {
           <p className="text-white/80 text-sm">Tập {category?.lastProduct?.seri}</p>
         </div>
       </div>
-    </Link>
+    </MVLink>
   )
 } 
