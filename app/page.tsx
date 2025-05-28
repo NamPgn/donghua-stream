@@ -79,7 +79,7 @@ const LazySection = ({ children, fallback, className = ""}: LazySectionProps) =>
 // Loading skeleton
 const SectionSkeleton = ({ height = "h-64" }: SectionSkeletonProps) => (
   <div className={`${height}`}>
-    <HomeLoading />
+    {/* <HomeLoading /> */}
   </div>
 )
 

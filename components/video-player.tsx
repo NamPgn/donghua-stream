@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react"
 import CryptoJS from "crypto-js"
 import { Monitor, Cloud, Link, Shield, AlertTriangle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { LINK_DOMAIN_SERVER_CLOUD, SELECTOR_ADLINK } from "@/constant/social.constant"
 
 interface Product {
   _id: string
@@ -52,43 +53,6 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
-  // Danh sách các domain shortcut phổ biến
-  const shortcutDomains = [
-    'bit.ly',
-    'tinyurl.com',
-    'short.link',
-    'is.gd',
-    'goo.gl',
-    't.co',
-    'ow.ly',
-    'buff.ly',
-    'cutt.ly',
-    'rb.gy',
-    'linktr.ee',
-    'tiny.cc',
-    'bc.vc',
-    'adf.ly',    // Ad-based shortener
-    'sh.st',     // Ad-based shortener  
-    'ouo.io',    // Ad-based shortener
-    'shink.me',  // Ad-based shortener
-    'exe.io',    // Ad-based shortener
-    'clk.sh',    // Ad-based shortener
-    'za.gl',     // Ad-based shortener
-    'short.pe',  // Ad-based shortener
-    'coin.mg',   // Ad-based shortener
-    'fc.lc',     // Ad-based shortener
-    'zzb.bz',    // Ad-based shortener
-    'urle.co',   // Ad-based shortener
-    'shorten.sh', // Ad-based shortener
-    'earnow.online', // Ad-based shortener
-    'yep.it',
-    'vk.cc',
-    'fumacrom.com',
-    "short.icu",
-    "abyss.to",  // Abyss Cloud domain
-    "abysscloud.to", // Abyss Cloud domain
-    "abysscloud.com" // Abyss Cloud domain
-  ]
 
   // Kiểm tra xem URL có phải là shortcut link không
   const checkIfShortcutLink = (url: string): boolean => {
@@ -96,7 +60,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       const urlObj = new URL(url)
       const hostname = urlObj.hostname.toLowerCase()
 
-      return shortcutDomains.some(domain =>
+      return LINK_DOMAIN_SERVER_CLOUD.some(domain =>
         hostname === domain || hostname.endsWith('.' + domain)
       )
     } catch {
@@ -115,62 +79,12 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       try {
         const iframeDoc = iframeRef.current.contentWindow.document
 
-        // Mở rộng danh sách selector quảng cáo
-        const adSelectors = [
-          // Selectors hiện tại
-          '[id*="ad"]',
-          '[class*="ad"]',
-          '[class*="advertisement"]',
-          '[class*="popup"]',
-          '[class*="overlay"]',
-          '[class*="banner"]',
-          '[class*="promo"]',
-          '.ad-container',
-          '.ads',
-          '.advertisement',
-          '.popup-overlay',
-          '.modal-overlay',
-          '.ad-banner',
-          '.video-ads',
-          '.preroll-ad',
-          '.midroll-ad',
-          '.postroll-ad',
-          // Thêm selectors mới
-          '[id*="popup"]',
-          '[id*="banner"]',
-          '[id*="overlay"]',
-          '[id*="modal"]',
-          '[class*="modal"]',
-          '[class*="dialog"]',
-          '[id*="dialog"]',
-          '[class*="lightbox"]',
-          '[id*="lightbox"]',
-          '[class*="sponsored"]',
-          '[id*="sponsored"]',
-          '[class*="promotion"]',
-          '[id*="promotion"]',
-          '[class*="commercial"]',
-          '[id*="commercial"]',
-          'iframe[src*="ad"]',
-          'iframe[src*="banner"]',
-          'iframe[src*="popup"]',
-          'iframe[src*="promo"]',
-          'iframe[src*="sponsored"]',
-          'div[style*="position: fixed"]',
-          'div[style*="position:absolute"]',
-          'div[style*="z-index: 9999"]',
-          'div[style*="z-index:9999"]',
-          'div[style*="z-index: 999"]',
-          'div[style*="z-index:999"]'
-        ]
-
-        // Hàm xóa quảng cáo mạnh hơn
         const removeAds = () => {
-          adSelectors.forEach(selector => {
+          SELECTOR_ADLINK.forEach(selector => {
             const elements = iframeDoc.querySelectorAll(selector)
             elements.forEach(el => {
               if (el instanceof HTMLElement) {
-                // Thêm nhiều style để đảm bảo ẩn hoàn toàn
+             
                 el.style.cssText = `
                   display: none !important;
                   visibility: hidden !important;
@@ -198,11 +112,11 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
           })
         }
 
-        // Chạy ngay và lặp lại với tần suất cao hơn
+    
         removeAds()
-        const adBlockInterval = setInterval(removeAds, 500) // Giảm xuống 500ms
+        const adBlockInterval = setInterval(removeAds, 500)
 
-        // Chặn window.open mạnh hơn
+    
         iframeRef.current.contentWindow.open = function() {
           console.log('Blocked popup attempt')
           return null
