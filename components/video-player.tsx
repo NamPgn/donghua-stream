@@ -203,7 +203,6 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
         const adBlockInterval = setInterval(removeAds, 500) // Giảm xuống 500ms
 
         // Chặn window.open mạnh hơn
-        const originalOpen = iframeRef.current.contentWindow.open
         iframeRef.current.contentWindow.open = function() {
           console.log('Blocked popup attempt')
           return null
