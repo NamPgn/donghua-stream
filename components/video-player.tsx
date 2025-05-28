@@ -105,19 +105,19 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   }
 
   // Hàm để chặn popup và quảng cáo cho video server tự host (chỉ khi không phải shortcut)
-
   const blockAdsAndPopups = () => {
     if (isShortcutLink) {
       console.log('Shortcut link detected - allowing ads to pass through')
-      return // Không chặn quảng cáo cho shortcut links
+      return
     }
 
     if (iframeRef.current && iframeRef.current.contentWindow) {
       try {
         const iframeDoc = iframeRef.current.contentWindow.document
 
-        // Chặn các element quảng cáo phổ biến cho video server
+        // Mở rộng danh sách selector quảng cáo
         const adSelectors = [
+          // Selectors hiện tại
           '[id*="ad"]',
           '[class*="ad"]',
           '[class*="advertisement"]',
@@ -134,33 +134,92 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
           '.video-ads',
           '.preroll-ad',
           '.midroll-ad',
-          '.postroll-ad'
+          '.postroll-ad',
+          // Thêm selectors mới
+          '[id*="popup"]',
+          '[id*="banner"]',
+          '[id*="overlay"]',
+          '[id*="modal"]',
+          '[class*="modal"]',
+          '[class*="dialog"]',
+          '[id*="dialog"]',
+          '[class*="lightbox"]',
+          '[id*="lightbox"]',
+          '[class*="sponsored"]',
+          '[id*="sponsored"]',
+          '[class*="promotion"]',
+          '[id*="promotion"]',
+          '[class*="commercial"]',
+          '[id*="commercial"]',
+          'iframe[src*="ad"]',
+          'iframe[src*="banner"]',
+          'iframe[src*="popup"]',
+          'iframe[src*="promo"]',
+          'iframe[src*="sponsored"]',
+          'div[style*="position: fixed"]',
+          'div[style*="position:absolute"]',
+          'div[style*="z-index: 9999"]',
+          'div[style*="z-index:9999"]',
+          'div[style*="z-index: 999"]',
+          'div[style*="z-index:999"]'
         ]
 
-        // Xóa các element quảng cáo
+        // Hàm xóa quảng cáo mạnh hơn
         const removeAds = () => {
           adSelectors.forEach(selector => {
             const elements = iframeDoc.querySelectorAll(selector)
             elements.forEach(el => {
               if (el instanceof HTMLElement) {
-                el.style.display = 'none !important'
-                el.style.visibility = 'hidden !important'
+                // Thêm nhiều style để đảm bảo ẩn hoàn toàn
+                el.style.cssText = `
+                  display: none !important;
+                  visibility: hidden !important;
+                  opacity: 0 !important;
+                  pointer-events: none !important;
+                  position: absolute !important;
+                  z-index: -9999 !important;
+                  width: 0 !important;
+                  height: 0 !important;
+                  overflow: hidden !important;
+                `
                 el.remove()
               }
             })
           })
+
+          // Xóa tất cả các iframe quảng cáo
+          const iframes = iframeDoc.getElementsByTagName('iframe')
+          Array.from(iframes).forEach(iframe => {
+            const src = iframe.src.toLowerCase()
+            if (src.includes('ad') || src.includes('banner') || src.includes('popup') || 
+                src.includes('promo') || src.includes('sponsored')) {
+              iframe.remove()
+            }
+          })
         }
 
-        // Chạy ngay và lặp lại để bắt quảng cáo load sau
+        // Chạy ngay và lặp lại với tần suất cao hơn
         removeAds()
-        const adBlockInterval = setInterval(removeAds, 1000)
+        const adBlockInterval = setInterval(removeAds, 500) // Giảm xuống 500ms
 
-        // Chặn window.open (popup)
-        iframeRef.current.contentWindow.open = () => null
+        // Chặn window.open mạnh hơn
+        const originalOpen = iframeRef.current.contentWindow.open
+        iframeRef.current.contentWindow.open = function() {
+          console.log('Blocked popup attempt')
+          return null
+        }
 
-        // Chặn alert, confirm
-        iframeRef.current.contentWindow.alert = () => { }
+        // Chặn các phương thức tạo popup khác
+        iframeRef.current.contentWindow.addEventListener('beforeunload', (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          return false
+        })
+
+        // Chặn alert, confirm, prompt
+        iframeRef.current.contentWindow.alert = () => {}
         iframeRef.current.contentWindow.confirm = () => false
+        iframeRef.current.contentWindow.prompt = () => null
 
         // Chặn các sự kiện click không mong muốn
         iframeDoc.addEventListener('click', (e) => {
@@ -171,27 +230,38 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
             return false
           }
 
-          // Chặn click vào overlay
-          if (target.classList.contains('overlay') || target.classList.contains('ad')) {
+          // Chặn click vào overlay và các element quảng cáo
+          if (target.closest('[class*="overlay"], [class*="ad"], [class*="popup"], [class*="modal"]')) {
             e.preventDefault()
             e.stopPropagation()
             return false
           }
         }, true)
 
-        // Chặn contextmenu (chuột phải)
+        // Chặn contextmenu
         iframeDoc.addEventListener('contextmenu', (e) => {
           e.preventDefault()
+          e.stopPropagation()
+          return false
         })
 
-        // Cleanup interval sau 30 giây
+        // Chặn các sự kiện khác có thể gây popup
+        const blockEvents = ['beforeunload', 'unload', 'blur', 'focus']
+        blockEvents.forEach(event => {
+          iframeDoc.addEventListener(event, (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+          }, true)
+        })
+
+        // Cleanup interval sau 1 phút thay vì 30 giây
         setTimeout(() => {
           clearInterval(adBlockInterval)
-        }, 30000)
+        }, 60000)
 
-      } catch {
-        // Cross-origin restrictions
-        console.log('Cannot access iframe content due to CORS policy')
+      } catch (error) {
+        console.log('Cannot access iframe content due to CORS policy:', error)
       }
     }
   }
