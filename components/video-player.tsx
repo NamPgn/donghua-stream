@@ -43,6 +43,7 @@ interface VideoPlayerProps {
 
 export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   const [videoSource, setVideoSource] = useState<string | null>(null)
+  const [selectedUrl, setSelectedUrl] = useState<string>("")
   const [currentServer, setCurrentServer] = useState<"dailymotion" | "server2" | "link">("dailymotion")
   const [isLoading, setIsLoading] = useState(true)
   const [adBlockEnabled, setAdBlockEnabled] = useState(true)
@@ -94,7 +95,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
     try {
       const urlObj = new URL(url)
       const hostname = urlObj.hostname.toLowerCase()
-      
+
       return shortcutDomains.some(domain =>
         hostname === domain || hostname.endsWith('.' + domain)
       )
@@ -104,7 +105,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   }
 
   // Hàm để chặn popup và quảng cáo cho video server tự host (chỉ khi không phải shortcut)
-  
+
   const blockAdsAndPopups = () => {
     if (isShortcutLink) {
       console.log('Shortcut link detected - allowing ads to pass through')
@@ -198,12 +199,12 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   useEffect(() => {
     if (!anime) {
       setVideoSource(null)
+      setSelectedUrl("")
       return
     }
 
     setIsLoading(true)
-    let selectedUrl = ""
-
+    let newSelectedUrl = ""
     switch (currentServer) {
       case "dailymotion":
         if (anime.dailyMotionServer) {
@@ -212,7 +213,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
             const decodedData = CryptoJS.AES.decrypt(anime.dailyMotionServer, secretKey).toString(CryptoJS.enc.Utf8)
 
             if (decodedData) {
-              selectedUrl = decodedData
+              newSelectedUrl = decodedData
             }
           } catch (error) {
             console.error("Error decoding Dailymotion server:", error)
@@ -221,43 +222,45 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
         break
       case "server2":
         if (anime.server2) {
-          selectedUrl = anime.server2
+          newSelectedUrl = anime.server2
         }
         break
       case "link":
         if (anime.link) {
-          selectedUrl = anime.link
+          newSelectedUrl = anime.link
         }
         break
     }
-    if (selectedUrl) {
-      // Kiểm tra xem có phải shortcut link không
-      const isShortcut = checkIfShortcutLink(selectedUrl)
-      setIsShortcutLink(isShortcut)
 
-      // Nếu là shortcut link, sử dụng URL gốc không thêm tham số ad block
-      // Nếu không phải shortcut, thêm tham số ad block
-      const finalUrl = isShortcut ? selectedUrl : addAdBlockParams(selectedUrl)
-      setVideoSource(finalUrl)
+    if (newSelectedUrl) {
+      setSelectedUrl(newSelectedUrl)
       setIsLoading(false)
       return
     }
 
     // If current server failed, try others
     if (anime.server2) {
-      const isShortcut = checkIfShortcutLink(anime.server2)
-      setIsShortcutLink(isShortcut)
-      setVideoSource(isShortcut ? anime.server2 : addAdBlockParams(anime.server2))
+      setSelectedUrl(anime.server2)
     } else if (anime.link) {
-      const isShortcut = checkIfShortcutLink(anime.link)
+      setSelectedUrl(anime.link)
+    } else {
+      setSelectedUrl("")
+    }
+    setIsLoading(false)
+  }, [anime, currentServer])
+
+  // New effect to handle URL processing and ad blocking
+  useEffect(() => {
+    if (selectedUrl) {
+      const isShortcut = checkIfShortcutLink(selectedUrl)
       setIsShortcutLink(isShortcut)
-      setVideoSource(isShortcut ? anime.link : addAdBlockParams(anime.link))
+      const finalUrl = isShortcut ? selectedUrl : addAdBlockParams(selectedUrl)
+      setVideoSource(finalUrl)
     } else {
       setVideoSource(null)
       setIsShortcutLink(false)
     }
-    setIsLoading(false)
-  }, [anime, currentServer])
+  }, [selectedUrl])
 
   // Hàm thêm tham số chặn quảng cáo vào URL cho các server tự host (chỉ khi không phải shortcut)
   const addAdBlockParams = (url: string): string => {
@@ -287,8 +290,6 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       return url
     }
   }
-
-  // Effect để chặn quảng cáo sau khi iframe load (chỉ khi không phải shortcut)
   useEffect(() => {
     if (videoSource && adBlockEnabled && !isShortcutLink) {
       const timer = setTimeout(() => {
@@ -297,9 +298,8 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
 
       return () => clearTimeout(timer)
     }
-  }, [videoSource, adBlockEnabled, isShortcutLink])
+  }, [videoSource, adBlockEnabled, isShortcutLink, selectedUrl])
 
-  // Effect để ẩn indicator sau 3 giây
   useEffect(() => {
     if (adBlockEnabled && !isShortcutLink) {
       setShowIndicator(true)
