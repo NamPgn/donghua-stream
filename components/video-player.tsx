@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
 import CryptoJS from "crypto-js"
-import { Monitor, Cloud, Link } from "lucide-react"
+import { Monitor, Cloud, Link, Shield, AlertTriangle } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Product {
@@ -45,8 +45,155 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   const [videoSource, setVideoSource] = useState<string | null>(null)
   const [currentServer, setCurrentServer] = useState<"dailymotion" | "server2" | "link">("dailymotion")
   const [isLoading, setIsLoading] = useState(true)
-
+  const [adBlockEnabled, setAdBlockEnabled] = useState(true)
+  const [showIndicator, setShowIndicator] = useState(true)
+  const [isShortcutLink, setIsShortcutLink] = useState(false)
   const playerRef = useRef<HTMLDivElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  // Danh sách các domain shortcut phổ biến
+  const shortcutDomains = [
+    'bit.ly',
+    'tinyurl.com',
+    'short.link',
+    'is.gd',
+    'goo.gl',
+    't.co',
+    'ow.ly',
+    'buff.ly',
+    'cutt.ly',
+    'rb.gy',
+    'linktr.ee',
+    'tiny.cc',
+    'bc.vc',
+    'adf.ly',    // Ad-based shortener
+    'sh.st',     // Ad-based shortener  
+    'ouo.io',    // Ad-based shortener
+    'shink.me',  // Ad-based shortener
+    'exe.io',    // Ad-based shortener
+    'clk.sh',    // Ad-based shortener
+    'za.gl',     // Ad-based shortener
+    'short.pe',  // Ad-based shortener
+    'coin.mg',   // Ad-based shortener
+    'fc.lc',     // Ad-based shortener
+    'zzb.bz',    // Ad-based shortener
+    'urle.co',   // Ad-based shortener
+    'shorten.sh', // Ad-based shortener
+    'earnow.online', // Ad-based shortener
+    'yep.it',
+    'vk.cc',
+    'fumacrom.com',
+    "short.icu",
+    "abyss.to",  // Abyss Cloud domain
+    "abysscloud.to", // Abyss Cloud domain
+    "abysscloud.com" // Abyss Cloud domain
+  ]
+
+  // Kiểm tra xem URL có phải là shortcut link không
+  const checkIfShortcutLink = (url: string): boolean => {
+    try {
+      const urlObj = new URL(url)
+      const hostname = urlObj.hostname.toLowerCase()
+      
+      return shortcutDomains.some(domain =>
+        hostname === domain || hostname.endsWith('.' + domain)
+      )
+    } catch {
+      return false
+    }
+  }
+
+  // Hàm để chặn popup và quảng cáo cho video server tự host (chỉ khi không phải shortcut)
+  
+  const blockAdsAndPopups = () => {
+    if (isShortcutLink) {
+      console.log('Shortcut link detected - allowing ads to pass through')
+      return // Không chặn quảng cáo cho shortcut links
+    }
+
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      try {
+        const iframeDoc = iframeRef.current.contentWindow.document
+
+        // Chặn các element quảng cáo phổ biến cho video server
+        const adSelectors = [
+          '[id*="ad"]',
+          '[class*="ad"]',
+          '[class*="advertisement"]',
+          '[class*="popup"]',
+          '[class*="overlay"]',
+          '[class*="banner"]',
+          '[class*="promo"]',
+          '.ad-container',
+          '.ads',
+          '.advertisement',
+          '.popup-overlay',
+          '.modal-overlay',
+          '.ad-banner',
+          '.video-ads',
+          '.preroll-ad',
+          '.midroll-ad',
+          '.postroll-ad'
+        ]
+
+        // Xóa các element quảng cáo
+        const removeAds = () => {
+          adSelectors.forEach(selector => {
+            const elements = iframeDoc.querySelectorAll(selector)
+            elements.forEach(el => {
+              if (el instanceof HTMLElement) {
+                el.style.display = 'none !important'
+                el.style.visibility = 'hidden !important'
+                el.remove()
+              }
+            })
+          })
+        }
+
+        // Chạy ngay và lặp lại để bắt quảng cáo load sau
+        removeAds()
+        const adBlockInterval = setInterval(removeAds, 1000)
+
+        // Chặn window.open (popup)
+        iframeRef.current.contentWindow.open = () => null
+
+        // Chặn alert, confirm
+        iframeRef.current.contentWindow.alert = () => { }
+        iframeRef.current.contentWindow.confirm = () => false
+
+        // Chặn các sự kiện click không mong muốn
+        iframeDoc.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement
+          if (target.tagName === 'A' && target.getAttribute('target') === '_blank') {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+          }
+
+          // Chặn click vào overlay
+          if (target.classList.contains('overlay') || target.classList.contains('ad')) {
+            e.preventDefault()
+            e.stopPropagation()
+            return false
+          }
+        }, true)
+
+        // Chặn contextmenu (chuột phải)
+        iframeDoc.addEventListener('contextmenu', (e) => {
+          e.preventDefault()
+        })
+
+        // Cleanup interval sau 30 giây
+        setTimeout(() => {
+          clearInterval(adBlockInterval)
+        }, 30000)
+
+      } catch {
+        // Cross-origin restrictions
+        console.log('Cannot access iframe content due to CORS policy')
+      }
+    }
+  }
 
   useEffect(() => {
     if (!anime) {
@@ -55,6 +202,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
     }
 
     setIsLoading(true)
+    let selectedUrl = ""
 
     switch (currentServer) {
       case "dailymotion":
@@ -64,9 +212,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
             const decodedData = CryptoJS.AES.decrypt(anime.dailyMotionServer, secretKey).toString(CryptoJS.enc.Utf8)
 
             if (decodedData) {
-              setVideoSource(decodedData)
-              setIsLoading(false)
-              return
+              selectedUrl = decodedData
             }
           } catch (error) {
             console.error("Error decoding Dailymotion server:", error)
@@ -75,30 +221,96 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
         break
       case "server2":
         if (anime.server2) {
-          setVideoSource(anime.server2)
-          setIsLoading(false)
-          return
+          selectedUrl = anime.server2
         }
         break
       case "link":
         if (anime.link) {
-          setVideoSource(anime.link)
-          setIsLoading(false)
-          return
+          selectedUrl = anime.link
         }
         break
+    }
+    if (selectedUrl) {
+      // Kiểm tra xem có phải shortcut link không
+      const isShortcut = checkIfShortcutLink(selectedUrl)
+      setIsShortcutLink(isShortcut)
+
+      // Nếu là shortcut link, sử dụng URL gốc không thêm tham số ad block
+      // Nếu không phải shortcut, thêm tham số ad block
+      const finalUrl = isShortcut ? selectedUrl : addAdBlockParams(selectedUrl)
+      setVideoSource(finalUrl)
+      setIsLoading(false)
+      return
     }
 
     // If current server failed, try others
     if (anime.server2) {
-      setVideoSource(anime.server2)
+      const isShortcut = checkIfShortcutLink(anime.server2)
+      setIsShortcutLink(isShortcut)
+      setVideoSource(isShortcut ? anime.server2 : addAdBlockParams(anime.server2))
     } else if (anime.link) {
-      setVideoSource(anime.link)
+      const isShortcut = checkIfShortcutLink(anime.link)
+      setIsShortcutLink(isShortcut)
+      setVideoSource(isShortcut ? anime.link : addAdBlockParams(anime.link))
     } else {
       setVideoSource(null)
+      setIsShortcutLink(false)
     }
     setIsLoading(false)
   }, [anime, currentServer])
+
+  // Hàm thêm tham số chặn quảng cáo vào URL cho các server tự host (chỉ khi không phải shortcut)
+  const addAdBlockParams = (url: string): string => {
+    if (!adBlockEnabled || isShortcutLink) return url
+
+    try {
+      const urlObj = new URL(url)
+
+      // Các tham số cho video server tự host
+      const adBlockParams = {
+        'autoplay': '1',
+        'controls': '1',
+        'playsinline': '1',
+        'preload': 'metadata',
+        'no_ads': '1',
+        'ad_block': '1',
+        'clean': '1',
+        'minimal': '1'
+      }
+
+      Object.entries(adBlockParams).forEach(([key, value]) => {
+        urlObj.searchParams.set(key, value)
+      })
+
+      return urlObj.toString()
+    } catch {
+      return url
+    }
+  }
+
+  // Effect để chặn quảng cáo sau khi iframe load (chỉ khi không phải shortcut)
+  useEffect(() => {
+    if (videoSource && adBlockEnabled && !isShortcutLink) {
+      const timer = setTimeout(() => {
+        blockAdsAndPopups()
+      }, 2000) // Chờ 2 giây để iframe load xong
+
+      return () => clearTimeout(timer)
+    }
+  }, [videoSource, adBlockEnabled, isShortcutLink])
+
+  // Effect để ẩn indicator sau 3 giây
+  useEffect(() => {
+    if (adBlockEnabled && !isShortcutLink) {
+      setShowIndicator(true)
+      const timer = setTimeout(() => {
+        setShowIndicator(false)
+      }, 3000)
+      return () => clearTimeout(timer)
+    } else {
+      setShowIndicator(false)
+    }
+  }, [adBlockEnabled, isShortcutLink])
 
   const servers = [
     {
@@ -112,15 +324,18 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   ] as const
 
   return (
-    <div className="flex flex-col gap-2">
-      <div ref={playerRef} className="relative w-full bg-black rounded-lg overflow-hidden aspect-video">
+    <div className="relative flex flex-col gap-2 relative">
+      <div ref={playerRef} className=" w-full bg-black rounded-lg aspect-video">
         {/* Video iframe */}
         {videoSource ? (
           <iframe
+            ref={iframeRef}
             src={videoSource}
             className="w-full h-full"
             allowFullScreen
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            sandbox="allow-scripts allow-same-origin allow-presentation allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"
+            onLoad={adBlockEnabled && !isShortcutLink ? blockAdsAndPopups : undefined}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-black text-white">
@@ -141,25 +356,67 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
             {episode.copyright}
           </div>
         )}
+
+        {/* Ad Block Status */}
+        {adBlockEnabled && !isShortcutLink && (
+          <div className={`absolute top-2 left-2 bg-green-600/80 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex items-center gap-0.5 sm:gap-1 z-50 transition-opacity duration-300 ${showIndicator ? 'opacity-100' : 'opacity-0'}`}>
+            <Shield className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+            <span>Ad Block On</span>
+          </div>
+        )}
+
+        {/* Shortcut Link Warning */}
+        {isShortcutLink && (
+          <div className="absolute top-2 left-2 bg-orange-600/80 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded flex items-center gap-0.5 sm:gap-1 z-50">
+            <AlertTriangle className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+            <span>Shortcut Link - Ads Allowed</span>
+          </div>
+        )}
       </div>
 
-      {/* Compact Server Selection */}
-      <div className="flex justify-center gap-2 mt-2">
-        {servers.map((server) => (
-          <button
-            key={server.id}
-            onClick={() => setCurrentServer(server.id)}
-            className={cn(
-              "flex items-center px-3 py-1.5 rounded text-xs font-medium transition-all",
-              currentServer === server.id ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-            )}
-            title={server.tooltip}
-          >
-            {server.icon}
-            <span className="ml-1">{server.name}</span>
-          </button>
-        ))}
+      {/* Controls */}
+      <div className="flex justify-between items-center">
+        {/* Server Selection */}
+        <div className="flex gap-2">
+          {servers.map((server) => (
+            <button
+              key={server.id}
+              onClick={() => setCurrentServer(server.id)}
+              className={cn(
+                "flex items-center px-3 py-1.5 rounded text-xs font-medium transition-all",
+                currentServer === server.id ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200",
+              )}
+              title={server.tooltip}
+            >
+              {server.icon}
+              <span className="ml-1">{server.name}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Ad Block Toggle */}
+        <button
+          onClick={() => setAdBlockEnabled(!adBlockEnabled)}
+          className={cn(
+            "flex items-center px-3 py-1.5 rounded text-xs font-medium transition-all",
+            adBlockEnabled
+              ? "bg-green-600 text-white hover:bg-green-700"
+              : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+          )}
+          title={adBlockEnabled ? "Disable ad blocking" : "Enable ad blocking"}
+          disabled={isShortcutLink}
+        >
+          <Shield className="h-3 w-3 mr-1" />
+          {isShortcutLink ? "Shortcut Detected" : (adBlockEnabled ? "Ad Block ON" : "Ad Block OFF")}
+        </button>
       </div>
+
+      {/* Link Type Info */}
+      {isShortcutLink && (
+        <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded">
+          ⚠️ Shortcut link detected. Ads will be displayed to support the link provider.
+        </div>
+      )}
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import MVImage from "./ui/image"
 import MVLink from "./Link"
 import { ANIME_PATHS } from "@/constant/path.constant"
+import { trim } from "lodash"
 
 interface AnimeProduct {
   _id: string;
@@ -51,17 +52,15 @@ export function AnimationCard({ anime, showBadge = true }: AnimationCardProps) {
           />
           {showBadge && (
             <div className="absolute top-2 right-2 flex gap-1.5">
-              {anime.isMovie && (
                 <Badge 
                   variant={anime.isMovie === "drama" ? "default" : "secondary"} 
                   className="text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5"
                 >
-                  {anime.isMovie === "drama" 
+                  {anime.products && trim(anime.products[0].seri)
                     ? (anime.products && anime.products.length > 0 ? `Tập ${anime.products[0].seri}` : "Drama")
                     : "Movie"
                   }
                 </Badge>
-              )}
               {anime.quality && anime.quality !== "undefined" && (
                 <Badge variant="outline" className="bg-black/50 text-white border-white/30 text-[10px] sm:text-[11px] px-1.5 sm:px-2 py-0.5">
                   {anime.quality}

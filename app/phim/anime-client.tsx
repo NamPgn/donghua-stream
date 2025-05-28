@@ -149,7 +149,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								<Button variant="outline">Thêm vào danh sách</Button>
 								<Button variant="outline" asChild className="cursor-pointer">
 									<a href={SOCIAL_LINKS.ZALO} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-										<img src="/7044033_zalo_icon.svg" alt="Zalo" className="w-5 h-5" />
+										<MVImage src="/7044033_zalo_icon.svg" width={80} height={80} alt="Zalo" className="w-5 h-5" />
 										<span className="whitespace-nowrap">Tham gia nhóm Zalo</span>
 									</a>
 								</Button>
