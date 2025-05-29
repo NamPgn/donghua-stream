@@ -92,7 +92,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
           }
         }, true)
 
-      } catch (error) {
+      } catch {
         // Cross-origin restrictions - không thể truy cập iframe content
         console.log('Cannot access iframe content due to CORS policy')
       }
@@ -183,7 +183,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       })
 
       return urlObj.toString()
-    } catch (error) {
+    } catch {
       return url
     }
   }
