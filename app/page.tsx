@@ -2,7 +2,6 @@
 import { Suspense, lazy, useState, useEffect, useRef, RefObject } from 'react'
 import { FeaturedSlider } from "@/components/featured-slider"
 import { Wrapper } from "@/components/wrapper"
-import HomeLoading from './loading'
 
 // Interfaces
 interface LazySectionProps {

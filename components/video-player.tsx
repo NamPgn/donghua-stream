@@ -94,7 +94,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
             ]
 
             videoEvents.forEach(event => {
-              video.addEventListener(event, (e) => {
+              video.addEventListener(event, () => {
                 // Chặn popup sau khi sự kiện video xảy ra
                 setTimeout(() => {
                   const popups = iframeDoc.querySelectorAll('[class*="popup"], [class*="modal"], [class*="overlay"]')
@@ -184,7 +184,11 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
 
           // Override window.addEventListener
           const originalAddEventListener = iframeWindow.addEventListener
-          iframeWindow.addEventListener = function(type: string, listener: any, options?: any) {
+          iframeWindow.addEventListener = function(
+            type: 'beforeunload' | 'unload' | 'blur' | 'focus' | string,
+            listener: EventListenerOrEventListenerObject,
+            options?: boolean | AddEventListenerOptions
+          ) {
             if (type === 'beforeunload' || type === 'unload' || type === 'blur' || type === 'focus') {
               return
             }
@@ -229,7 +233,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
 
           // Override window.setTimeout và setInterval
           const originalSetTimeout = iframeWindow.setTimeout
-          iframeWindow.setTimeout = function(callback: Function | string, delay: number, ...args: any[]) {
+          iframeWindow.setTimeout = function(callback, delay: number, ...args) {
             if (typeof callback === 'string' && (
               callback.includes('window.open') ||
               callback.includes('popup') ||
@@ -242,7 +246,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
           }
 
           const originalSetInterval = iframeWindow.setInterval
-          iframeWindow.setInterval = function(callback: Function | string, delay: number, ...args: any[]) {
+          iframeWindow.setInterval = function(callback, delay: number, ...args) {
             if (typeof callback === 'string' && (
               callback.includes('window.open') ||
               callback.includes('popup') ||
