@@ -51,13 +51,11 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
-  // Hàm để chặn popup và quảng cáo
   const blockAdsAndPopups = () => {
     if (iframeRef.current && iframeRef.current.contentWindow) {
       try {
         const iframeDoc = iframeRef.current.contentWindow.document
         
-        // Chặn các element quảng cáo phổ biến
         const adSelectors = [
           '[id*="ad"]',
           '[class*="ad"]',

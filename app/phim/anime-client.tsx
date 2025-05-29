@@ -77,87 +77,98 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 		<>
 			{/* Header with background image - Full width */}
 			<div className="relative h-[500px] md:h-[400px] w-full overflow-hidden">
-				<div className="absolute inset-0">
-					<MVImage
-						src={anime.linkImg}
-						alt={anime.name}
-						fill
-						className="object-cover brightness-[0.4] w-full h-full"
-						priority
-					/>
+	<div className="absolute inset-0">
+		<MVImage
+			src={anime.linkImg}
+			alt={anime.name}
+			fill
+			className="object-cover brightness-[0.4] w-full h-full"
+			priority
+		/>
+	</div>
+	<div className="absolute inset-0 bg-gradient-to-t from-background md:via-background/50 via-background/0 to-transparent h-[500px] md:h-[400px]" />
+	<div className="container relative h-[520px] md:h-[400px] flex flex-col justify-end pb-8 mx-auto">
+		<MVLink href="/" className="absolute top-4 left-3 md:left-0 md:top-8">
+			<Button variant="outline" size="sm" className="gap-1 bg-background/80 backdrop-blur-sm cursor-pointer">
+				<ArrowLeft className="h-4 w-4" />
+				<span className="hidden sm:inline">Trở về Trang chủ</span>
+				<span className="sm:hidden">Trở về</span>
+			</Button>
+		</MVLink>
+		<div className="flex flex-col md:flex-row gap-6 items-start mt-auto md:mt-0">
+			<div className="relative h-[200px] w-[140px] md:h-[240px] md:w-[160px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
+				<MVImage
+					src={anime.linkImg || "/placeholder.svg"}
+					alt={anime.name}
+					fill
+					className="object-cover"
+					priority
+				/>
+			</div>
+			<div className="flex-1 text-center md:text-left">
+				<div className="flex flex-wrap gap-2 mb-2 justify-center md:justify-start">
+					<Badge variant="secondary">{anime.type}</Badge>
+					<Badge variant="secondary">{anime.isMovie}</Badge>
 				</div>
-				<div className="absolute inset-0 bg-gradient-to-t from-background md:via-background/50 via-background/0 to-transparent h-[500px] md:h-[400px]" />
-				<div className="container relative h-[500px] md:h-[400px] flex flex-col justify-end pb-8 mx-auto">
-					<MVLink href="/" className="absolute top-4 left-3 md:left-0 md:top-8">
-						<Button variant="outline" size="sm" className="gap-1 bg-background/80 backdrop-blur-sm cursor-pointer">
-							<ArrowLeft className="h-4 w-4" />
-							<span className="hidden sm:inline">Trở về Trang chủ</span>
-							<span className="sm:hidden">Trở về</span>
-						</Button>
-					</MVLink>
-					<div className="flex flex-col md:flex-row gap-6 items-start mt-auto md:mt-0">
-						<div className="relative h-[200px] w-[140px] md:h-[240px] md:w-[160px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
-							<MVImage
-								src={anime.linkImg || "/placeholder.svg"}
-								alt={anime.name}
-								fill
-								className="object-cover"
-								priority
-							/>
-						</div>
-						<div className="flex-1 text-center md:text-left">
-							<div className="flex flex-wrap gap-2 mb-2 justify-center md:justify-start">
-								<Badge variant="secondary">{anime.type}</Badge>
-								<Badge variant="secondary">{anime.isMovie}</Badge>
-							</div>
-							<h1 className="text-2xl md:text-4xl font-bold mb-2 text-white line-clamp-2">{anime.name}</h1>
-							<p className="text-sm md:text-base text-white/80 mb-4 line-clamp-2">{anime.anotherName}</p>
-							<div className="flex flex-wrap gap-4 text-sm mb-4 justify-center md:justify-start">
-								<div className="flex items-center gap-1 text-white/90">
-									<Star className="h-4 w-4 text-yellow-500" />
-									<span>{anime.up} lượt thích</span>
-								</div>
-								<div className="flex items-center gap-1 text-white/90">
-									<Calendar className="h-4 w-4" />
-									<span>{anime.year}</span>
-								</div>
-								<div className="flex items-center gap-1 text-white/90">
-									<Clock className="h-4 w-4" />
-									<span>{anime.time}/tập</span>
-								</div>
-								<div className="flex items-center gap-1 text-white/90">
-									<Film className="h-4 w-4" />
-									<span>{anime.sumSeri} tập</span>
-								</div>
-								<div className="flex items-center gap-1 text-white/90">
-									<Globe className="h-4 w-4" />
-									<span>{anime.lang}</span>
-								</div>
-								<div className="flex items-center gap-1 text-white/90">
-									<BarChart4 className="h-4 w-4" />
-									<span>{anime.quality}</span>
-								</div>
-							</div>
-							<div className="flex flex-wrap gap-3 md:justify-start justify-center w-full">
-								<Button asChild>
-									{
-										anime?.isMovie === 'drama' ?
-											<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}-episode-${anime?.products[0]?.seri}`}>Xem ngay</MVLink> :
-											<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}`}>Xem ngay</MVLink>
-									}
-								</Button>
-								<Button variant="outline">Thêm vào danh sách</Button>
-								<Button variant="outline" asChild className="cursor-pointer">
-									<a href={SOCIAL_LINKS.ZALO} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-										<MVImage src="/7044033_zalo_icon.svg" width={80} height={80} alt="Zalo" className="w-5 h-5" />
-										<span className="whitespace-nowrap">Tham gia nhóm Zalo</span>
-									</a>
-								</Button>
-							</div>
-						</div>
+				<h1 className="text-2xl md:text-4xl font-bold mb-2 text-white line-clamp-2">{anime.name}</h1>
+				<p className="text-sm md:text-base text-white/80 mb-4 line-clamp-2">{anime.anotherName}</p>
+				<div className="flex flex-wrap gap-4 text-sm mb-4 justify-center md:justify-start">
+					<div className="flex items-center gap-1 text-white/90">
+						<Star className="h-4 w-4 text-yellow-500" />
+						<span>{anime.up} lượt thích</span>
+					</div>
+					<div className="flex items-center gap-1 text-white/90">
+						<Calendar className="h-4 w-4" />
+						<span>{anime.year}</span>
+					</div>
+					<div className="flex items-center gap-1 text-white/90">
+						<Clock className="h-4 w-4" />
+						<span>{anime.time}/tập</span>
+					</div>
+					<div className="flex items-center gap-1 text-white/90">
+						<Film className="h-4 w-4" />
+						<span>{anime.sumSeri} tập</span>
+					</div>
+					<div className="flex items-center gap-1 text-white/90">
+						<Globe className="h-4 w-4" />
+						<span>{anime.lang}</span>
+					</div>
+					<div className="flex items-center gap-1 text-white/90">
+						<BarChart4 className="h-4 w-4" />
+						<span>{anime.quality}</span>
 					</div>
 				</div>
+				{/* 3 buttons in one row on all screen sizes */}
+				<div className="flex flex-row gap-2 md:gap-3 md:justify-start justify-center w-full px-2 md:px-0">
+					<Button asChild className="flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
+						{
+							anime?.isMovie === 'drama' ?
+								<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}-episode-${anime?.products[0]?.seri}`}>
+									<span className="hidden sm:inline">Xem ngay</span>
+									<span className="sm:hidden">Xem</span>
+								</MVLink> :
+								<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}`}>
+									<span className="hidden sm:inline">Xem ngay</span>
+									<span className="sm:hidden">Xem</span>
+								</MVLink>
+						}
+					</Button>
+					<Button variant="outline" className="flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
+						<span className="hidden sm:inline">Thêm vào danh sách</span>
+						<span className="sm:hidden">Danh sách</span>
+					</Button>
+					<Button variant="outline" asChild className="cursor-pointer flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
+						<a href={SOCIAL_LINKS.ZALO} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1 md:gap-2">
+							<MVImage src="/7044033_zalo_icon.svg" width={80} height={80} alt="Zalo" className="w-4 h-4 md:w-5 md:h-5" />
+							<span className="hidden sm:inline whitespace-nowrap">Tham gia nhóm Zalo</span>
+							<span className="sm:hidden">Zalo</span>
+						</a>
+					</Button>
+				</div>
 			</div>
+		</div>
+	</div>
+</div>
 
 			<Wrapper>
 				<Tabs defaultValue="info" className="w-full">
