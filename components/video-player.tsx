@@ -78,13 +78,287 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
     if (iframeRef.current && iframeRef.current.contentWindow) {
       try {
         const iframeDoc = iframeRef.current.contentWindow.document
+        const iframeWindow = iframeRef.current.contentWindow
 
+        // Chặn các sự kiện video
+        const blockVideoEvents = () => {
+          const videoElements = iframeDoc.getElementsByTagName('video')
+          Array.from(videoElements).forEach(video => {
+            // Chặn các sự kiện video
+            const videoEvents = [
+              'play', 'pause', 'seeking', 'seeked', 'timeupdate',
+              'volumechange', 'ratechange', 'ended', 'waiting',
+              'canplay', 'canplaythrough', 'loadedmetadata',
+              'loadeddata', 'stalled', 'suspend', 'abort',
+              'error', 'emptied', 'loadedmetadata', 'loadeddata'
+            ]
+
+            videoEvents.forEach(event => {
+              video.addEventListener(event, (e) => {
+                // Chặn popup sau khi sự kiện video xảy ra
+                setTimeout(() => {
+                  const popups = iframeDoc.querySelectorAll('[class*="popup"], [class*="modal"], [class*="overlay"]')
+                  popups.forEach(popup => {
+                    if (popup instanceof HTMLElement) {
+                      popup.remove()
+                    }
+                  })
+                }, 100)
+              }, true)
+            })
+
+            // Override các phương thức video
+            const originalPlay = video.play
+            video.play = function() {
+              const result = originalPlay.apply(this)
+              // Chặn popup sau khi play
+              setTimeout(() => {
+                const popups = iframeDoc.querySelectorAll('[class*="popup"], [class*="modal"], [class*="overlay"]')
+                popups.forEach(popup => {
+                  if (popup instanceof HTMLElement) {
+                    popup.remove()
+                  }
+                })
+              }, 100)
+              return result
+            }
+
+            const originalPause = video.pause
+            video.pause = function() {
+              const result = originalPause.apply(this)
+              // Chặn popup sau khi pause
+              setTimeout(() => {
+                const popups = iframeDoc.querySelectorAll('[class*="popup"], [class*="modal"], [class*="overlay"]')
+                popups.forEach(popup => {
+                  if (popup instanceof HTMLElement) {
+                    popup.remove()
+                  }
+                })
+              }, 100)
+              return result
+            }
+          })
+        }
+
+        // Chặn tất cả các phương thức mở popup
+        const blockPopupMethods = () => {
+          // Override window.open
+          iframeWindow.open = function() {
+            console.log('Blocked popup attempt via window.open')
+            return null
+          }
+
+          // Override window.alert, confirm, prompt
+          iframeWindow.alert = () => {}
+          iframeWindow.confirm = () => false
+          iframeWindow.prompt = () => null
+
+          // Override window.location
+          const originalLocation = iframeWindow.location
+          Object.defineProperty(iframeWindow, 'location', {
+            get: () => originalLocation,
+            set: (value) => {
+              console.log('Blocked location change:', value)
+              return false
+            }
+          })
+
+          // Override window.focus
+          iframeWindow.focus = () => {}
+
+          // Override window.blur
+          iframeWindow.blur = () => {}
+
+          // Override window.moveTo, moveBy, resizeTo, resizeBy
+          iframeWindow.moveTo = () => {}
+          iframeWindow.moveBy = () => {}
+          iframeWindow.resizeTo = () => {}
+          iframeWindow.resizeBy = () => {}
+
+          // Override window.scrollTo, scrollBy
+          iframeWindow.scrollTo = () => {}
+          iframeWindow.scrollBy = () => {}
+
+          // Override window.postMessage
+          iframeWindow.postMessage = () => {}
+
+          // Override window.addEventListener
+          const originalAddEventListener = iframeWindow.addEventListener
+          iframeWindow.addEventListener = function(type: string, listener: any, options?: any) {
+            if (type === 'beforeunload' || type === 'unload' || type === 'blur' || type === 'focus') {
+              return
+            }
+            return originalAddEventListener.call(this, type, listener, options)
+          }
+
+          // Override window.onbeforeunload
+          Object.defineProperty(iframeWindow, 'onbeforeunload', {
+            get: () => null,
+            set: () => {}
+          })
+
+          // Override window.onunload
+          Object.defineProperty(iframeWindow, 'onunload', {
+            get: () => null,
+            set: () => {}
+          })
+
+          // Override window.onblur
+          Object.defineProperty(iframeWindow, 'onblur', {
+            get: () => null,
+            set: () => {}
+          })
+
+          // Override window.onfocus
+          Object.defineProperty(iframeWindow, 'onfocus', {
+            get: () => null,
+            set: () => {}
+          })
+
+          // Override window.onclick
+          Object.defineProperty(iframeWindow, 'onclick', {
+            get: () => null,
+            set: () => {}
+          })
+
+          // Override window.oncontextmenu
+          Object.defineProperty(iframeWindow, 'oncontextmenu', {
+            get: () => null,
+            set: () => {}
+          })
+
+          // Override window.setTimeout và setInterval
+          const originalSetTimeout = iframeWindow.setTimeout
+          iframeWindow.setTimeout = function(callback: Function | string, delay: number, ...args: any[]) {
+            if (typeof callback === 'string' && (
+              callback.includes('window.open') ||
+              callback.includes('popup') ||
+              callback.includes('alert') ||
+              callback.includes('confirm')
+            )) {
+              return 0
+            }
+            return originalSetTimeout.call(this, callback, delay, ...args)
+          }
+
+          const originalSetInterval = iframeWindow.setInterval
+          iframeWindow.setInterval = function(callback: Function | string, delay: number, ...args: any[]) {
+            if (typeof callback === 'string' && (
+              callback.includes('window.open') ||
+              callback.includes('popup') ||
+              callback.includes('alert') ||
+              callback.includes('confirm')
+            )) {
+              return 0
+            }
+            return originalSetInterval.call(this, callback, delay, ...args)
+          }
+        }
+
+        // Chặn các sự kiện có thể gây popup
+        const blockEvents = () => {
+          const events = [
+            'beforeunload', 'unload', 'blur', 'focus',
+            'click', 'dblclick', 'contextmenu', 'mousedown',
+            'mouseup', 'mousemove', 'keydown', 'keyup',
+            'keypress', 'submit', 'change', 'select',
+            'load', 'DOMContentLoaded', 'readystatechange',
+            'play', 'pause', 'seeking', 'seeked', 'timeupdate',
+            'volumechange', 'ratechange', 'ended', 'waiting'
+          ]
+
+          events.forEach(event => {
+            iframeDoc.addEventListener(event, (e) => {
+              const target = e.target as HTMLElement
+              
+              // Chặn click vào các element quảng cáo
+              if (target.closest('[class*="overlay"], [class*="ad"], [class*="popup"], [class*="modal"]')) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+              }
+
+              // Chặn click vào các link mở popup
+              if (target.tagName === 'A' && (
+                target.getAttribute('target') === '_blank' ||
+                target.getAttribute('onclick')?.includes('window.open') ||
+                target.getAttribute('onclick')?.includes('popup') ||
+                target.getAttribute('href')?.startsWith('javascript:') ||
+                target.getAttribute('href')?.startsWith('data:')
+              )) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+              }
+
+              // Chặn các sự kiện có thể gây popup
+              if (event === 'beforeunload' || event === 'unload' || event === 'blur' || event === 'focus') {
+                e.preventDefault()
+                e.stopPropagation()
+                return false
+              }
+
+              // Chặn popup sau khi sự kiện xảy ra
+              setTimeout(() => {
+                const popups = iframeDoc.querySelectorAll('[class*="popup"], [class*="modal"], [class*="overlay"]')
+                popups.forEach(popup => {
+                  if (popup instanceof HTMLElement) {
+                    popup.remove()
+                  }
+                })
+              }, 100)
+            }, true)
+          })
+        }
+
+        // Chặn các script có thể gây popup
+        const blockScripts = () => {
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach((node) => {
+                  if (node instanceof HTMLScriptElement) {
+                    const scriptContent = node.textContent || ''
+                    if (scriptContent.includes('window.open') || 
+                        scriptContent.includes('popup') ||
+                        scriptContent.includes('alert') ||
+                        scriptContent.includes('confirm') ||
+                        scriptContent.includes('location.href') ||
+                        scriptContent.includes('location.replace') ||
+                        scriptContent.includes('location.assign')) {
+                      node.remove()
+                    }
+                  } else if (node instanceof HTMLElement) {
+                    // Xóa các element có thể gây popup
+                    if (node.getAttribute('onclick')?.includes('window.open') ||
+                        node.getAttribute('onclick')?.includes('popup') ||
+                        node.getAttribute('onload')?.includes('window.open') ||
+                        node.getAttribute('onload')?.includes('popup')) {
+                      node.remove()
+                    }
+                  }
+                })
+              }
+            })
+          })
+
+          observer.observe(iframeDoc.documentElement, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['onclick', 'onload', 'onbeforeunload', 'onunload', 'onblur', 'onfocus']
+          })
+
+          return observer
+        }
+
+        // Xóa các element quảng cáo và popup
         const removeAds = () => {
+          // Xóa các element theo selector
           SELECTOR_ADLINK.forEach(selector => {
             const elements = iframeDoc.querySelectorAll(selector)
             elements.forEach(el => {
               if (el instanceof HTMLElement) {
-             
                 el.style.cssText = `
                   display: none !important;
                   visibility: hidden !important;
@@ -101,7 +375,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
             })
           })
 
-          // Xóa tất cả các iframe quảng cáo
+          // Xóa các iframe quảng cáo
           const iframes = iframeDoc.getElementsByTagName('iframe')
           Array.from(iframes).forEach(iframe => {
             const src = iframe.src.toLowerCase()
@@ -110,67 +384,30 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
               iframe.remove()
             }
           })
+
+          // Xóa các element có style position: fixed hoặc absolute
+          const fixedElements = iframeDoc.querySelectorAll('div[style*="position: fixed"], div[style*="position:absolute"]')
+          fixedElements.forEach(el => {
+            if (el instanceof HTMLElement) {
+              el.remove()
+            }
+          })
         }
 
-    
+        // Áp dụng tất cả các biện pháp chặn
+        blockPopupMethods()
+        blockEvents()
+        blockVideoEvents()
+        const scriptObserver = blockScripts()
         removeAds()
-        const adBlockInterval = setInterval(removeAds, 500)
 
-    
-        iframeRef.current.contentWindow.open = function() {
-          console.log('Blocked popup attempt')
-          return null
-        }
+        // Chạy removeAds định kỳ với tần suất cao hơn
+        const adBlockInterval = setInterval(removeAds, 100)
 
-        // Chặn các phương thức tạo popup khác
-        iframeRef.current.contentWindow.addEventListener('beforeunload', (e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          return false
-        })
-
-        // Chặn alert, confirm, prompt
-        iframeRef.current.contentWindow.alert = () => {}
-        iframeRef.current.contentWindow.confirm = () => false
-        iframeRef.current.contentWindow.prompt = () => null
-
-        // Chặn các sự kiện click không mong muốn
-        iframeDoc.addEventListener('click', (e) => {
-          const target = e.target as HTMLElement
-          if (target.tagName === 'A' && target.getAttribute('target') === '_blank') {
-            e.preventDefault()
-            e.stopPropagation()
-            return false
-          }
-
-          // Chặn click vào overlay và các element quảng cáo
-          if (target.closest('[class*="overlay"], [class*="ad"], [class*="popup"], [class*="modal"]')) {
-            e.preventDefault()
-            e.stopPropagation()
-            return false
-          }
-        }, true)
-
-        // Chặn contextmenu
-        iframeDoc.addEventListener('contextmenu', (e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          return false
-        })
-
-        // Chặn các sự kiện khác có thể gây popup
-        const blockEvents = ['beforeunload', 'unload', 'blur', 'focus']
-        blockEvents.forEach(event => {
-          iframeDoc.addEventListener(event, (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            return false
-          }, true)
-        })
-
-        // Cleanup interval sau 1 phút thay vì 30 giây
+        // Cleanup sau 1 phút
         setTimeout(() => {
           clearInterval(adBlockInterval)
+          scriptObserver.disconnect()
         }, 60000)
 
       } catch (error) {
