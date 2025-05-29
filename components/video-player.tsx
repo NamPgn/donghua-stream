@@ -46,6 +46,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
   const [currentServer, setCurrentServer] = useState<"dailymotion" | "server2" | "link">("dailymotion")
   const [isLoading, setIsLoading] = useState(true)
   const [adBlockEnabled, setAdBlockEnabled] = useState(true)
+  const [showAdBlockStatus, setShowAdBlockStatus] = useState(true)
 
   const playerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -199,6 +200,17 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
     }
   }, [videoSource, adBlockEnabled])
 
+  // Effect để ẩn ad block status sau 3s
+  useEffect(() => {
+    if (adBlockEnabled) {
+      setShowAdBlockStatus(true)
+      const timer = setTimeout(() => {
+        setShowAdBlockStatus(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [adBlockEnabled])
+
   const servers = [
     {
       id: "dailymotion",
@@ -246,7 +258,12 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
 
         {/* Ad Block Status */}
         {adBlockEnabled && (
-          <div className="absolute top-4 left-4 bg-green-600/80 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+          <div 
+            className={cn(
+              "absolute top-4 left-4 bg-green-600/80 text-white text-xs px-2 py-1 rounded flex items-center gap-1 transition-opacity duration-300",
+              showAdBlockStatus ? "opacity-100" : "opacity-0"
+            )}
+          >
             <Shield className="h-3 w-3" />
             <span>Ad Block ON</span>
           </div>
