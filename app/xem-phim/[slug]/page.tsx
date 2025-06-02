@@ -9,48 +9,48 @@ type tParams = Promise<{ slug: string }>;
 export async function generateMetadata(
   { params }: { params: tParams }
 ): Promise<Metadata> {
-  const { slug } = await  params
+  const { slug } = await params
 
-    const animeData = await getAnimeEpisode(slug)
+  const animeData = await getAnimeEpisode(slug)
 
-    if (!animeData) {
-      return {
-        title: 'Không tìm thấy',
-        description: 'Không tìm thấy tập phim này'
-      }
-    }
-
-    const title = `${animeData.name} - Tập ${animeData.seri}`
-    const description = animeData.category.des
-
+  if (!animeData) {
     return {
+      title: 'Không tìm thấy',
+      description: 'Không tìm thấy tập phim này'
+    }
+  }
+
+  const title = `${animeData.isMovie === 'drama' ? animeData.name + ' - ' + animeData.seri : animeData.name}`
+  const description = animeData.category.des
+
+  return {
+    title,
+    description,
+    openGraph: {
       title,
       description,
-      openGraph: {
-        title,
-        description,
-        type: 'website',
-        siteName: 'Hoạt hình trung quốc Website',
-        images: [{
-          url: animeData.category.linkImg || '/og-image.jpg',
-          width: 1200,
-          height: 630,
-          alt: title
-        }]
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-        images: [animeData.category.linkImg || '/og-image.jpg']
-      },
-      alternates: {
-        canonical: `${ANIME_PATHS.WATCH}/${slug}`
-      }
+      type: 'website',
+      siteName: 'Hoạt hình trung quốc Website',
+      images: [{
+        url: animeData.category.linkImg || '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: title
+      }]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [animeData.category.linkImg || '/og-image.jpg']
+    },
+    alternates: {
+      canonical: `${ANIME_PATHS.WATCH}/${slug}`
     }
+  }
 }
 
-export default async function WatchPage( { params }: { params: tParams }) {
+export default async function WatchPage({ params }: { params: tParams }) {
   const { slug } = await params
 
   const animeData = await getAnimeEpisode(slug)

@@ -24,7 +24,7 @@ export function PopularAnime() {
         </MVLink>
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 md:gap-3">
-        {animePopular?.data.slice(0, 12).map((anime) => (
+        {animePopular?.data?.map((anime) => (
           <AnimationCard key={anime._id} anime={anime} />
         ))}
       </div>

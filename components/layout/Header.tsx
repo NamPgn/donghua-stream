@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useState, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import MVLink from '../Link';
+import Image from 'next/image';
 
 const navigation = [
   { name: 'Trang chủ', href: '/' },
@@ -49,12 +50,12 @@ export default function Header() {
 
   return (
     <header className="border-b sticky top-0 bg-background z-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto">
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Desktop Navigation */}
           <div className="flex items-center gap-4 md:gap-8">
             <MVLink href="/" className="text-xl md:text-2xl font-bold">
-              HH3D
+              <Image src={'/images/logo.png'} alt='logo' width={80} height={80} />
             </MVLink>
             <nav className="hidden md:flex gap-6">
               {navigation.map((item) => (
@@ -82,8 +83,8 @@ export default function Header() {
                 onChange={handleInputChange}
               />
             </form>
-            <Button variant="ghost" asChild>
-              <MVLink href="/profile">Profile</MVLink>
+            <Button variant="default" size="sm">
+               Đăng nhập
             </Button>
           </div>
 

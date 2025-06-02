@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     BY_SLUG: '/category',
     EPISODE: '/product',
     SEARCH: '/categorys/search',
+    CATEGORY: '/categorys',
   },
   // Poster endpoints
   POSTER: {
@@ -19,6 +20,7 @@ export const API_ENDPOINTS = {
   SERIES: {
     HEADER: '/series/header',
     BY_SLUG: '/series',
+    ALL: '/series/active'
   },
   // Category endpoints
   CATEGORY: {

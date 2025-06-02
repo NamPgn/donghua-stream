@@ -38,10 +38,9 @@ export interface Anime {
 
 export interface AnimeResponse {
     data: Anime[]
-    pagination: {
-        currentPage: number;
-        totalPages: number;
-    };
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
 }
 
 export const animeApi = {
@@ -51,6 +50,10 @@ export const animeApi = {
 
     getPopular: async (): Promise<AnimeResponse> => {
         return baseApi.get<AnimeResponse>(API_ENDPOINTS.ANIME.POPULAR);
+    },
+
+    getCategory: async (page: number): Promise<AnimeResponse> => {
+        return baseApi.get<AnimeResponse>(`${API_ENDPOINTS.ANIME.CATEGORY}?page=${page}`);
     },
 
     getBySlug: async (slug: string): Promise<Anime> => {

@@ -8,8 +8,13 @@ const seriesApi = {
     },
     getSeriesBySlug: async (slug: string) => {
         const response = await api.get(`${API_ENDPOINTS.SERIES.BY_SLUG}/${slug}`);
-        console.log(response)
         return response;
+    },
+
+    getSeriesAllByActive: async () => {
+        const response = await api.get(`${API_ENDPOINTS.SERIES.ALL}`);
+        return response
+
     }
 }
 

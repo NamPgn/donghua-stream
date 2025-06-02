@@ -8,6 +8,13 @@ export function useAnime() {
 	});
 }
 
+export function useAnimeCategory(page: number) {
+	return useQuery<AnimeResponse>({
+		queryKey: ['category', page],
+		queryFn: () => animeApi.getCategory(page),
+	});
+}
+
 export function useAnimePopular() {
 	return useQuery<AnimeResponse>({
 		queryKey: ['popular'],

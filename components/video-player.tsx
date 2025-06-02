@@ -269,7 +269,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       </div>
 
       {/* Controls */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
         {/* Server Selection */}
         <div className="flex gap-2">
           {servers.map((server) => (

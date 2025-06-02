@@ -66,12 +66,12 @@ interface Anime {
 }
 
 // Component Zalo Button đẹp
-const ZaloButton = ({ 
-  href, 
-  variant = "default", 
+const ZaloButton = ({
+  href,
+  variant = "default",
   size = "default",
   showIcon = true,
-  children 
+  children
 }: {
   href: string;
   variant?: "default" | "outline" | "ghost" | "floating";
@@ -80,27 +80,27 @@ const ZaloButton = ({
   children?: React.ReactNode;
 }) => {
   const baseClasses = "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]";
-  
+
   const variants = {
     default: "  ",
     outline: "border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white",
     ghost: "text-blue-600 hover:bg-blue-50",
     floating: "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl fixed bottom-6 right-6 z-50 rounded-full animate-pulse hover:animate-none"
   };
-  
+
   const sizes = {
     sm: "px-3 py-1.5 text-sm",
     default: "px-4 py-2",
     lg: "px-6 py-3 text-lg"
   };
-  
+
   const className = `${baseClasses} ${variants[variant]} ${sizes[size]}`;
-  
+
   return (
-    <a 
-      href={href} 
-      target="_blank" 
-      rel="noopener noreferrer" 
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       className={className}
     >
       {showIcon && (
@@ -260,7 +260,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
             <div className="hidden md:block w-full lg:w-1/4">
               {/* Zalo Community Card - Desktop Sidebar */}
               <ZaloCommunityCard href={zaloLink} />
-              
+
               <div className="bg-card rounded-lg shadow-sm p-4">
                 <h2 className="text-lg font-semibold mb-4 border-b pb-2">
                   Danh sách tập
@@ -300,7 +300,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                           >
                             <div className="flex items-center gap-3">
                               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-medium">
-                                {product.seri}
+                                {anime.category.isMovie === "drama" ? product.seri : 'Full'}
                               </div>
                               <div>
                                 {anime.category.isMovie !== "drama" ? (
@@ -311,9 +311,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                   </h3>
                                 )}
                                 <p className="text-sm text-muted-foreground">
-                                  {product.isApproved
-                                    ? "Đã phát hành"
-                                    : "Sắp chiếu"}
+                                  Đã phát hành
                                 </p>
                               </div>
                             </div>
