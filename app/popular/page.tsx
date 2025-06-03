@@ -24,9 +24,14 @@ interface Category {
   categories: Anime[]
 }
 
+interface SeriesData {
+  categoryTopRate: Anime[]
+  seasons: Category[]
+}
+
 export default function PopularPage() {
-  // Sort animes by rating (highest first)
-  const { data: dataSeries } = useSeriesAllByActive();
+  const { data: response } = useSeriesAllByActive();
+  const dataSeries = response as SeriesData | undefined;
   return (
     <div className="min-h-screen bg-background">
       <main className="container py-8 mx-auto px-2 md:px-0">

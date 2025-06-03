@@ -29,10 +29,10 @@ export function useAnimeById(id: string) {
 	});
 }
 
-export function useSearchAnime(query: string) {
-	return useQuery<Anime >({
-		queryKey: ['search', query],
-		queryFn: () => animeApi.search(query),
+export function useSearchAnime(query: string, filters: { categories: string[], status: string }) {
+	return useQuery({
+		queryKey: ['search', query, filters],
+		queryFn: () => animeApi.search(query, filters),
 		enabled: query.length > 0,
 	});
 } 

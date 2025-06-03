@@ -64,7 +64,17 @@ export const animeApi = {
         return baseApi.get(`${API_ENDPOINTS.ANIME.EPISODE}/${slug}`);
     },
 
-    search: async (query: string): Promise<Anime> => {
-        return baseApi.get<Anime>(`${API_ENDPOINTS.ANIME.SEARCH}?value=${query}`);
+    search: async (query: string, filters?: { categories?: string[], status?: string }): Promise<AnimeResponse> => {
+        let url = `${API_ENDPOINTS.ANIME.SEARCH}?value=${query}`;
+        
+        if (filters?.categories?.length) {
+            url += `&categories=${filters.categories.join(',')}`;
+        }
+        
+        if (filters?.status) {
+            url += `&status=${filters.status}`;
+        }
+        
+        return baseApi.get<AnimeResponse>(url);
     }
 }; 

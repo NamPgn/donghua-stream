@@ -29,6 +29,9 @@ export const API_ENDPOINTS = {
     NOMINATED: '/categories/nominated',
     SITEMAP: '/categorys/sitemap',
   },
+  TAGS:{
+    ALL:'/tags'
+  }
 } as const;
 
 // HTTP Status Codes

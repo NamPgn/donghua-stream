@@ -20,8 +20,10 @@ interface Category {
 }
 
 interface SeriesResponse {
-	categoryTopRate: Anime[]
-	seasons: Category[]
+	data: {
+		categoryTopRate: Anime[]
+		seasons: Category[]
+	}
 }
 
 export const useSeries = () => {
@@ -63,7 +65,7 @@ export const useSeriesAllByActive = () => {
 	})
 
 	return {
-		data: data?.data,
+		data: data,
 		isLoading,
 		error
 	}
