@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from '../../constant/api.constant';
 const tagsApi = {
     getAllTags: async () => {
         const response = await api.get(API_ENDPOINTS.TAGS.ALL);
-        return response
+        return response.data
     },
 }
 

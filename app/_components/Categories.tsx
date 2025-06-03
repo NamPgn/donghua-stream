@@ -11,7 +11,6 @@ interface seriesProp {
 
 export function Categories() {
   const { data: series } = useSeriesContext();
-
   return (
     <section className="mb-12">
       <div className="flex items-center justify-between mb-6">

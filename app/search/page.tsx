@@ -16,15 +16,25 @@ import type { Category } from "./types/types"
 export default function SearchPage() {
   const searchParams = useSearchParams()
   const [searchQuery, setSearchQuery] = useState("")
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [statusFilter, setStatusFilter] = useState("")
   const [showFilters, setShowFilters] = useState(false)
 
   const { data: categoriesResponse } = useTags()
-  const { data: searchResults, isLoading } = useSearchAnime(searchQuery, {
+  const { data: searchResults, isLoading } = useSearchAnime(debouncedSearchQuery, {
     categories: selectedCategories,
     status: statusFilter
   })
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 500) // 500ms delay
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
 
   const categories = (categoriesResponse as unknown as Category[]) || []
   const results = Array.isArray(searchResults) ? searchResults : []

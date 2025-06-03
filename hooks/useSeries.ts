@@ -35,7 +35,7 @@ export const useSeries = () => {
 	})
 
 	return {
-		data: data?.data,
+		data: data,
 		isLoading,
 		error
 	}
@@ -50,7 +50,7 @@ export const useSeriesBySlug = (slug: string) => {
 	})
 
 	return {
-		data: data?.data,
+		data: data,
 		isLoading,
 		error
 	}
