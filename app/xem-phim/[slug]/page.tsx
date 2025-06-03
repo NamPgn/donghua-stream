@@ -12,7 +12,7 @@ export async function generateMetadata(
   const { slug } = await params
 
   const animeData = await getAnimeEpisode(slug)
-
+  console.log(animeData)
   if (!animeData) {
     return {
       title: 'Không tìm thấy',
@@ -20,7 +20,7 @@ export async function generateMetadata(
     }
   }
 
-  const title = `${animeData.isMovie === 'drama' ? animeData.name + ' - ' + animeData.seri : animeData.name}`
+  const title = `${animeData.category.isMovie === 'drama' ? animeData.name + ' - ' + animeData.seri : animeData.name}`
   const description = animeData.category.des
 
   return {
