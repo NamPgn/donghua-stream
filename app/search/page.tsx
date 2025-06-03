@@ -31,7 +31,7 @@ export default function SearchPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchQuery(searchQuery)
-    }, 500) // 500ms delay
+    }, 500) 
 
     return () => clearTimeout(timer)
   }, [searchQuery])

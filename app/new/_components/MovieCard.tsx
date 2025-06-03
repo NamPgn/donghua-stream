@@ -1,5 +1,4 @@
 import Image from "next/image"
-import Link from "next/link"
 import { Clock, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -64,11 +63,11 @@ export function MovieCard({ movie }: MovieCardProps) {
       </div>
 
       <CardContent className="p-4 bg-gradient-to-br from-card to-muted/20">
-        <Link href={`/movie/${movie.slug}`} className="block group-hover:text-primary transition-colors duration-300">
+        <MVLink href={`${ANIME_PATHS.BASE}/${movie.slug}`} className="block group-hover:text-primary transition-colors duration-300">
           <h3 className="font-bold text-sm line-clamp-2 leading-tight mb-2 group-hover:text-primary transition-colors duration-300">
             {movie.name}
           </h3>
-        </Link>
+        </MVLink>
 
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
