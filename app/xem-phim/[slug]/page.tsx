@@ -20,7 +20,7 @@ export async function generateMetadata(
     }
   }
 
-  const title = `${animeData.category.isMovie === 'drama' ? animeData.name + ' - ' + animeData.seri : animeData.name}`
+  const title = `${animeData.category.isMovie === 'drama' ? animeData.name + ' - Tập ' + animeData.seri : animeData.name}`
   const description = animeData.category.des
 
   return {
