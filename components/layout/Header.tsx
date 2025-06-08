@@ -11,9 +11,9 @@ import Image from 'next/image';
 
 const navigation = [
   { name: 'Trang chủ', href: '/' },
-  // { name: 'Popular', href: '/popular' },
-  // { name: 'New', href: '/new' },
-  // { name: 'Categories', href: '/categories' },
+  { name: 'Phổ biến', href: '/popular' },
+  { name: 'Mới nhất', href: '/new' },
+  { name: 'Thể loại', href: '/categories' },
 ];
 
 export default function Header() {
@@ -83,9 +83,9 @@ export default function Header() {
                 onChange={handleInputChange}
               />
             </form>
-            <Button variant="default" size="sm">
+            {/* <Button variant="default" size="sm">
                Đăng nhập
-            </Button>
+            </Button> */}
           </div>
 
           {/* Mobile Menu Button */}
