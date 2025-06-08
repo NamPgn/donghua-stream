@@ -10,7 +10,6 @@ import {
   Calendar,
   Clock,
   Star,
-  Users,
   MessageCircle,
   ExternalLink,
 } from "lucide-react";
@@ -112,24 +111,6 @@ const ZaloButton = ({
   );
 };
 
-// Component Zalo Card cho sidebar
-const ZaloCommunityCard = ({ href }: { href: string }) => (
-  <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4 mb-4">
-    <div className="flex items-center gap-3 mb-3">
-      <div className="bg-blue-600 p-2 rounded-full">
-        <Users className="w-5 h-5 text-white" />
-      </div>
-      <div>
-        <h3 className="font-semibold text-blue-900">Cộng đồng Zalo</h3>
-        <p className="text-sm text-blue-700">Thảo luận & cập nhật mới</p>
-      </div>
-    </div>
-    <ZaloButton href={href} variant="default" size="sm">
-      <Users className="w-4 h-4" />
-      Tham gia ngay
-    </ZaloButton>
-  </div>
-);
 
 export function WatchClient({ anime }: { anime: Anime }) {
   const [comment, setComment] = useState("");
@@ -173,25 +154,6 @@ export function WatchClient({ anime }: { anime: Anime }) {
               <div className="rounded-lg overflow-hidden">
                 <VideoPlayer episode={currentEpisode} anime={anime} />
 
-                {/* Zalo CTA sau video - Mobile */}
-                <div className="block md:hidden mt-4 p-4 bg-gradient-to-r from-primary/90 via-primary to-primary/90 rounded-lg text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="bg-primary-foreground/10 p-2 rounded-full">
-                          <MessageCircle className="w-5 h-5" />
-                        </div>
-                        <h3 className="font-semibold text-lg">Thảo luận phim này?</h3>
-                      </div>
-                      <p className="text-sm opacity-90 ml-12">Tham gia nhóm Zalo để chat cùng AD</p>
-                    </div>
-                    <div className="ml-4">
-                      <div className="bg-primary-foreground/10 hover:bg-primary-foreground/20 p-2 rounded-full transition-colors duration-200">
-                        <MVImage src="/7044033_zalo_icon.svg" width={80} height={80} alt="Zalo" className="w-6 h-6" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
                 <div className="block md:hidden mt-4 rounded-lg p-4">
                   <h2 className="text-lg font-semibold mb-3 border-b pb-2">
@@ -258,8 +220,6 @@ export function WatchClient({ anime }: { anime: Anime }) {
             </div>
 
             <div className="hidden md:block w-full lg:w-1/4">
-              {/* Zalo Community Card - Desktop Sidebar */}
-              <ZaloCommunityCard href={zaloLink} />
 
               <div className="bg-card rounded-lg shadow-sm p-4">
                 <h2 className="text-lg font-semibold mb-4 border-b pb-2">
@@ -354,7 +314,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
           <div>
             <h1 className="text-2xl font-bold">
-              {anime.category?.isMovie === 'drama' ? anime.name + " - Tập" + anime.seri : anime.name}
+              {anime.category?.isMovie === 'drama' ? anime.name + " - Tập " + anime.seri : anime.name}
             </h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-sm text-muted-foreground">
               {anime.category?.isMovie === 'drama' ? "Tập " + anime.seri : ''}

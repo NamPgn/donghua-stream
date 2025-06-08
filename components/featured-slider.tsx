@@ -62,6 +62,7 @@ export function FeaturedSlider() {
                   <h1 className="text-xl sm:text-2xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
                     {poster.name}
                   </h1>
+                  <p className="text-sm sm:text-base md:text-lg text-white/70 italic mb-2 sm:mb-3">{poster.anotherName}</p>
                   <p className="text-xs sm:text-sm md:text-base text-white/80 mb-3 sm:mb-4 line-clamp-2 md:line-clamp-3">
                     {poster.descriptions}
                   </p>

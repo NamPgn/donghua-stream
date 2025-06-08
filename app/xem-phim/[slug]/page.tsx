@@ -12,7 +12,6 @@ export async function generateMetadata(
   const { slug } = await params
 
   const animeData = await getAnimeEpisode(slug)
-  console.log(animeData)
   if (!animeData) {
     return {
       title: 'Không tìm thấy',
