@@ -132,12 +132,6 @@ export default function SearchPage() {
 
             {/* Mobile Filters */}
             <div className="md:hidden">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="w-full py-2 px-4 bg-primary text-primary-foreground rounded-md"
-              >
-                {showFilters ? "Ẩn bộ lọc" : "Hiện bộ lọc"}
-              </button>
               {showFilters && (
                 <div className="mt-4">
                   <SearchFilters

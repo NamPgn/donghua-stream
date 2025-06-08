@@ -56,3 +56,10 @@ export const AUTH = {
   AUTH_HEADER_PREFIX: 'Bearer',
   LOGIN_PATH: '/login',
 } as const;
+
+export const NAVIGATION = [
+  { name: 'Trang chủ', href: '/' },
+  { name: 'Tất cả', href: '/popular' },
+  { name: 'Mới nhất', href: '/new' },
+  { name: 'Thể loại', href: '/categories' },
+];

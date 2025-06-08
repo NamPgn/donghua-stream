@@ -8,13 +8,7 @@ import { useState, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import MVLink from '../Link';
 import Image from 'next/image';
-
-const navigation = [
-  { name: 'Trang chủ', href: '/' },
-  { name: 'Phổ biến', href: '/popular' },
-  { name: 'Mới nhất', href: '/new' },
-  { name: 'Thể loại', href: '/categories' },
-];
+import { NAVIGATION } from '@/constant';
 
 export default function Header() {
   const pathname = usePathname();
@@ -23,7 +17,6 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Debounced search function
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       if (query.trim()) {
@@ -58,7 +51,7 @@ export default function Header() {
               <Image src={'/images/logo.png'} alt='logo' width={80} height={80} />
             </MVLink>
             <nav className="hidden md:flex gap-6">
-              {navigation.map((item) => (
+              {NAVIGATION.map((item) => (
                 <MVLink
                   key={item.href}
                   href={item.href}
@@ -128,11 +121,11 @@ export default function Header() {
           </div>
         )}
 
-        {/* Mobile Navigation Menu */}
+        {/* Mobile NAVIGATION Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t">
             <nav className="flex flex-col py-4">
-              {navigation.map((item) => (
+              {NAVIGATION.map((item) => (
                 <MVLink
                   key={item.href}
                   href={item.href}
