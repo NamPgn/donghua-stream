@@ -17,6 +17,7 @@ interface AnimeProduct {
 	_id: string
 	seri: string
 	isApproved: boolean
+	slug:string
 }
 
 interface Rating {
@@ -147,7 +148,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								<Button asChild className="flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
 									{
 										anime?.isMovie === 'drama' ?
-											<MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}-episode-${anime?.products[0]?.seri}`}>
+											<MVLink href={`${ANIME_PATHS.WATCH}/${anime?.products[0]?.slug}`}>
 												<span className="hidden sm:inline">Xem ngay</span>
 												<span className="sm:hidden">Xem</span>
 											</MVLink> :
