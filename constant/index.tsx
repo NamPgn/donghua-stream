@@ -59,7 +59,7 @@ export const AUTH = {
 
 export const NAVIGATION = [
   { name: 'Trang chủ', href: '/' },
-  { name: 'Tất cả', href: '/popular' },
-  { name: 'Mới nhất', href: '/new' },
+  { name: 'Phổ biến', href: '/popular' },
+  { name: 'Tất cả', href: '/new' },
   { name: 'Thể loại', href: '/categories' },
 ];
