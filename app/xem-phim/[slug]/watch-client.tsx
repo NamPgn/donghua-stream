@@ -294,7 +294,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                 disabled={!product.isApproved}
                               >
                                 <MVLink
-                                  href={`${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${product.seri}`}
+                                  href={`${ANIME_PATHS.WATCH}/${product.slug}`}
                                 >
                                   Xem
                                 </MVLink>

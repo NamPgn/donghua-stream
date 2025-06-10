@@ -256,7 +256,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 											</div>
 											<Button size="sm" asChild disabled={!product.isApproved}>
 												{
-													anime.isMovie === 'drama' ? <MVLink href={`${ANIME_PATHS.WATCH}/${anime?.products[0]?.slug}`}>Xem</MVLink> : <MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}`}>Xem</MVLink>
+													anime.isMovie === 'drama' ? <MVLink href={`${ANIME_PATHS.WATCH}/${product.slug}`}>Xem</MVLink> : <MVLink href={`${ANIME_PATHS.WATCH}/${anime.slug}`}>Xem</MVLink>
 												}
 											</Button>
 										</div>
