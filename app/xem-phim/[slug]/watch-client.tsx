@@ -135,7 +135,6 @@ export function WatchClient({ anime }: { anime: Anime }) {
     currentEpisodeNumber < totalEpisodes ? currentEpisodeNumber + 1 : null;
 
   const zaloLink = anime.zaloGroupLink || SOCIAL_LINKS.ZALO;
-
   return (
     <div className="min-h-screen bg-background">
       <Wrapper>
@@ -153,7 +152,6 @@ export function WatchClient({ anime }: { anime: Anime }) {
             <div className="w-full lg:w-3/4">
               <div className="rounded-lg overflow-hidden">
                 <VideoPlayer episode={currentEpisode} anime={anime} />
-
 
                 <div className="block md:hidden mt-4 rounded-lg p-4">
                   <h2 className="text-lg font-semibold mb-3 border-b pb-2">
@@ -190,7 +188,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                           <Button
                             key={index}
                             variant={
-                              product.seri === currentEpisode.seri
+                              Number(product.seri) === Number(anime.seri)
                                 ? "default"
                                 : "outline"
                             }
@@ -278,25 +276,35 @@ export function WatchClient({ anime }: { anime: Anime }) {
                             {anime.category.isMovie !== "drama" ? (
                               <Button
                                 size="sm"
+                                variant={
+                                  Number(product.seri) === Number(anime.seri)
+                                    ? "default"
+                                    : "outline"
+                                }
                                 asChild
                                 disabled={!product.isApproved}
                               >
                                 <MVLink
                                   href={`${ANIME_PATHS.WATCH}/${anime.category.slug}`}
                                 >
-                                  Xem
+                                  {Number(product.seri) === Number(anime.seri) ? 'Đang phát' : 'Xem ngay'}
                                 </MVLink>
                               </Button>
                             ) : (
                               <Button
                                 size="sm"
                                 asChild
+                                variant={
+                                  Number(product.seri) === Number(anime.seri)
+                                    ? "default"
+                                    : "outline"
+                                }
                                 disabled={!product.isApproved}
                               >
                                 <MVLink
                                   href={`${ANIME_PATHS.WATCH}/${product.slug}`}
                                 >
-                                  Xem
+                                  {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem ngay'}
                                 </MVLink>
                               </Button>
                             )}
