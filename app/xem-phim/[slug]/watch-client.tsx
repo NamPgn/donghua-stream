@@ -287,7 +287,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                 <MVLink
                                   href={`${ANIME_PATHS.WATCH}/${anime.category.slug}`}
                                 >
-                                  {Number(product.seri) === Number(anime.seri) ? 'Đang phát' : 'Xem ngay'}
+                                  {Number(product.seri) === Number(anime.seri) ? 'Đang phát' : 'Xem'}
                                 </MVLink>
                               </Button>
                             ) : (
@@ -304,7 +304,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                 <MVLink
                                   href={`${ANIME_PATHS.WATCH}/${product.slug}`}
                                 >
-                                  {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem ngay'}
+                                  {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
                                 </MVLink>
                               </Button>
                             )}
