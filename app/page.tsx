@@ -2,8 +2,6 @@
 import { Suspense, lazy, useState, useEffect, useRef, RefObject } from 'react'
 import { FeaturedSlider } from "@/components/featured-slider"
 import { Wrapper } from "@/components/wrapper"
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { WeeklySchedulePreview } from '@/components/weekly-schedule';
 
 // Interfaces
