@@ -2,6 +2,9 @@
 import { Suspense, lazy, useState, useEffect, useRef, RefObject } from 'react'
 import { FeaturedSlider } from "@/components/featured-slider"
 import { Wrapper } from "@/components/wrapper"
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { WeeklySchedulePreview } from '@/components/weekly-schedule';
 
 // Interfaces
 interface LazySectionProps {
@@ -102,6 +105,14 @@ export default function HomePage() {
           className="mb-8"
         >
           <PopularAnime />
+        </LazySection>
+
+        {/* Weekly Schedule Preview */}
+        <LazySection
+          fallback={<SectionSkeleton />}
+          className="mb-8"
+        >
+          <WeeklySchedulePreview />
         </LazySection>
 
         <LazySection
