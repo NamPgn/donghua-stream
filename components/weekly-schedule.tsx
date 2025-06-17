@@ -1,10 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { Clock, Play, Calendar, CalendarDays } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -33,10 +31,13 @@ export function WeeklySchedulePreview() {
 		return dayMap[currentDay] || "Thứ 2"
 	}
 
-	const goToToday = () => {
+	useEffect(() => {
 		setSelectedDay(getTodayKey())
-	}
+	}, [])
 
+	// const goToToday = () => {
+
+	// }
 	if (isLoading) {
 		return (
 			<div className="flex items-center justify-center py-12">
@@ -49,7 +50,7 @@ export function WeeklySchedulePreview() {
 		<div className="w-full mx-auto space-y-3 sm:space-y-4">
 			<div className="flex items-center justify-between mb-6">
 				<div className="flex items-center gap-2">
-					<CalendarDays className="h-6 w-6 text-primary" />
+					<CalendarDays className="h-6 w-6 text-primary text-blue-500" />
 					<h2 className="text-2xl font-bold">Lịch chiếu tuần này</h2>
 				</div>
 				{/* <Link href="/schedule" className="flex items-center text-sm text-primary hover:underline">
@@ -57,11 +58,8 @@ export function WeeklySchedulePreview() {
 				</Link> */}
 			</div>
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
-				<div className="flex items-center gap-2 sm:gap-3">
-					<Button variant="outline" size="sm" onClick={goToToday} className="h-8 px-2 sm:px-3">
-						<Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-						<span className="text-xs sm:text-sm">Hôm nay</span>
-					</Button>
+				<div className="flex items-center sm:gap-1">
+					<span className="text-xs sm:text-sm text-muted-foreground">Hôm nay, </span>
 					<div className="text-xs sm:text-sm text-muted-foreground">
 						{new Date().toLocaleDateString("vi-VN", {
 							weekday: "long",
@@ -70,9 +68,9 @@ export function WeeklySchedulePreview() {
 						})}
 					</div>
 				</div>
-				<div className="text-xs sm:text-sm text-muted-foreground">
+				{/* <div className="text-xs sm:text-sm text-muted-foreground">
 					<span className="font-medium">{schedule?.content?.length || 0}</span> phim
-				</div>
+				</div> */}
 			</div>
 
 			{/* Tabs */}
@@ -100,7 +98,7 @@ export function WeeklySchedulePreview() {
 										key={anime._id}
 										className="group overflow-hidden border-0 shadow-sm hover:shadow-md transition-all duration-200 bg-card/50 hover:bg-card"
 									>
-										<MVLink href={ANIME_PATHS.BASE + "/" +  anime.slug}>
+										<MVLink href={ANIME_PATHS.BASE + "/" + anime.slug}>
 											<div className="flex gap-2 sm:gap-3 p-2 sm:p-3">
 												{/* Thumbnail */}
 												<div className="relative w-12 sm:w-14 aspect-[3/4] flex-shrink-0 rounded-md overflow-hidden bg-muted">

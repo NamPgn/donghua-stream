@@ -14,6 +14,8 @@ import type { Poster } from "@/services/api/poster.api"
 import MVImage from "./ui/image"
 import MVLink from "./Link"
 
+
+
 export function FeaturedSlider() {
   const { data, isLoading, error } = useSlider()
 

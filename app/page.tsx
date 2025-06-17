@@ -4,7 +4,6 @@ import { FeaturedSlider } from "@/components/featured-slider"
 import { Wrapper } from "@/components/wrapper"
 import { WeeklySchedulePreview } from '@/components/weekly-schedule';
 
-// Interfaces
 interface LazySectionProps {
   children: React.ReactNode;
   fallback: React.ReactNode;
@@ -20,7 +19,6 @@ interface UseIntersectionObserverReturn {
   isVisible: boolean;
 }
 
-// Lazy load components
 const NewReleases = lazy(() => import("./_components/NewReleases").then(module => ({
   default: module.NewReleases
 })))
@@ -60,7 +58,7 @@ const useIntersectionObserver = (threshold = 0.1): UseIntersectionObserverReturn
 }
 
 // Component wrapper với lazy loading
-const LazySection = ({ children, fallback, className = ""}: LazySectionProps) => {
+const LazySection = ({ children, fallback, className = "" }: LazySectionProps) => {
   const { ref, isVisible } = useIntersectionObserver(0.1)
 
   return (
@@ -87,6 +85,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <Wrapper>
+
         <section className="mb-12">
           <FeaturedSlider />
         </section>
