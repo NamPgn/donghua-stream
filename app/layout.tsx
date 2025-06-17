@@ -57,11 +57,10 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-site-verification',
-    yandex: 'your-yandex-verification',
+    google: `${process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}`,
   },
   alternates: {
-    canonical: 'https://your-domain.com',
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL}`,
   },
   category: 'entertainment',
 };
