@@ -26,7 +26,7 @@ const generateSitemapXML = async (): Promise<MetadataRoute.Sitemap> => {
 
     item.products.forEach((product) => {
       sitemap.push({
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}ANIME_PATHS.WATCH/${product?.slug}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}${ANIME_PATHS.WATCH}/${product?.slug}`,
         lastModified: new Date(),
         changeFrequency: "daily",
         priority: 0.8,
