@@ -5,7 +5,7 @@ import { getAnimeData } from "@/services/anime.server";
 import { Wrapper } from "@/components/wrapper";
 import NominatedFilm from "@/app/xem-phim/_components/NominatedFilm";
 import { ANIME_PATHS } from "@/constant/path.constant";
-
+import Script from "next/script";
 type tParams = Promise<{ slug: string }>;
 export async function generateMetadata(
   { params }: { params: tParams }
@@ -71,6 +71,29 @@ export default async function AnimePage(  { params }: { params: tParams }) {
       <Wrapper>
         <NominatedFilm seriesId={animeData?.relatedSeasons} categoryId={animeData?._id} />
       </Wrapper>
+      <Script type="application/ld+json" id="movie-schema">
+  {JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Movie",
+    "name": animeData.name,
+    "alternateName": animeData.anotherName,
+    "description": animeData.des,
+    "image": animeData.linkImg,
+    "url": `https://hh3dtq.site/phim/${slug}`,
+    "inLanguage": "vi",
+    "potentialAction": {
+      "@type": "WatchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `https://hh3dtq.site/phim/${slug}`,
+        "actionPlatform": [
+          "http://schema.org/DesktopWebPlatform",
+          "http://schema.org/MobileWebPlatform"
+        ]
+      }
+    }
+  })}
+</Script>
     </>
 
   )
