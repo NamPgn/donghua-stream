@@ -21,10 +21,28 @@ export async function generateMetadata(
 
   const title = `${animeData.category.isMovie === 'drama' ? animeData.name + ' - Tập ' + animeData.seri : animeData.name}`
   const description = animeData.category.des
-
+const keywords = [
+  title,
+  `${title} Vietsub`,
+  `${title} Lồng Tiếng`,
+  `${title} Thuyết Minh`,
+  `${title} phimmoi`,
+  `${title} youtube`,
+  `${title} full`,
+  "hhninja",
+  "hhkungfu",
+  "hhpanda",
+  "tvhay",
+  "animehay",
+  "vtvgiaitri",
+      "hh3d",
+      "hoathinh3d",
+      "hh3dtq"
+];
   return {
     title,
     description,
+    keywords,
     openGraph: {
       title,
       description,
