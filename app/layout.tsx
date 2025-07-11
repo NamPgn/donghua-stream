@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s | Hoạt hình trung quốc"
   },
   description: "Xem phim hoạt hình trung quốc mới nhất, chất lượng cao, cập nhật nhanh chóng. Thưởng thức các bộ phim hoạt hình trung quốc hay nhất với phụ đề tiếng Việt.",
-  keywords: ["hoạt hình trung quốc", "phim hoạt hình", "anime trung quốc", "donghua", "xem phim online"],
+  keywords: ["hoạt hình trung quốc", "hh3d", "anime trung quốc", "hoạt hình 3d trung quốc", "hh3dtq", "hhpanda"],
   authors: [{ name: "PH ANG" }],
   formatDetection: {
     email: false,
@@ -51,9 +51,7 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
       'max-image-preview': 'large',
-      'max-snippet': -1,
     },
   },
   verification: {
@@ -62,7 +60,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${process.env.NEXT_PUBLIC_SITE_URL}`,
   },
-  category: 'entertainment',
 };
 
 export default function RootLayout({
