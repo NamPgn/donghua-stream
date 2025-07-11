@@ -24,10 +24,30 @@ export async function generateMetadata(
     const title = `${animeData.name} - ${animeData.anotherName}`
     const description = animeData.des
     const imageUrl = animeData.linkImg
-
+    const keywords = [
+  animeData.name,
+  `${animeData.name} Vietsub`,
+  `${animeData.name} Lồng Tiếng`,
+  `${animeData.name} Thuyết Minh`,
+  `${animeData.name} phimmoi`,
+  `${animeData.name} youtube`,
+  `${animeData.name} full`,
+  animeData.anotherName,
+  `${animeData.anotherName} full`,
+  "hhninja",
+  "hhkungfu",
+  "hhpanda",
+  "tvhay",
+  "animehay",
+  "vtvgiaitri",
+      "hh3d",
+      "hoathinh3d",
+      "hh3dtq"
+];
     return {
       title,
       description,
+      keywords,
       openGraph: {
         title,
         description,
