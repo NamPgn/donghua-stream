@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { SeriesProvider } from "@/contexts/SeriesContext"
 import { Metadata } from "next"
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -77,6 +78,7 @@ export default function RootLayout({
             <Footer />
         </SeriesProvider>
           </Providers>
+        <GoogleAnalytics gaId="G-0EEY3R7F0S" />
       </body>
     </html>
   );
