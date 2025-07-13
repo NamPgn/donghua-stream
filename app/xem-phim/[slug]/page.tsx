@@ -20,11 +20,28 @@ export async function generateMetadata(
   }
 
   const title = `${animeData.category.isMovie === 'drama' ? animeData.name + ' - Tập ' + animeData.seri : animeData.name}`
+  const titleOg = `${animeData.category.isMovie === 'drama' ? animeData.name + ' Tập ' + animeData.seri : animeData.name}`
   const description = animeData.category.des
-
+  const keywords = [
+    titleOg,
+    `${titleOg} Vietsub`,
+    `${titleOg} Lồng Tiếng`,
+    `${titleOg} Thuyết Minh`,
+    `${titleOg} phimmoi`,
+    `${titleOg} full`,
+    `${titleOg} hhninja`,
+    `${titleOg} hhkungfu`,
+    `${titleOg} hhpanda`,
+    `${titleOg} tvhay`,
+    `${titleOg} animehay`,
+    `${titleOg} hh3d`,
+    `${titleOg} hoathinh3d`,
+    `${titleOg} hh3dtq`
+  ];
   return {
     title,
     description,
+    keywords,
     openGraph: {
       title,
       description,

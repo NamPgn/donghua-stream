@@ -17,7 +17,6 @@ export function WeeklySchedulePreview() {
 	const [selectedDay, setSelectedDay] = useState("Thứ 2")
 	const { schedule, isLoading } = useSchedule(selectedDay)
 	const currentDay = new Date().toLocaleDateString("vi-VN", { weekday: "long" })
-
 	const getTodayKey = () => {
 		const dayMap: Record<string, string> = {
 			"Thứ Hai": "Thứ 2",
@@ -26,7 +25,7 @@ export function WeeklySchedulePreview() {
 			"Thứ Năm": "Thứ 5",
 			"Thứ Sáu": "Thứ 6",
 			"Thứ Bảy": "Thứ 7",
-			"Chủ Nhật": "Chủ Nhật",
+			"Chủ Nhật": "Chủ nhật",
 		}
 		return dayMap[currentDay] || "Thứ 2"
 	}
@@ -35,9 +34,6 @@ export function WeeklySchedulePreview() {
 		setSelectedDay(getTodayKey())
 	}, [])
 
-	// const goToToday = () => {
-
-	// }
 	if (isLoading) {
 		return (
 			<div className="flex items-center justify-center py-12">
