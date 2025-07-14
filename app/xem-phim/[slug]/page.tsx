@@ -42,6 +42,15 @@ export async function generateMetadata(
     title,
     description,
     keywords,
+     robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+    },
+  },
     openGraph: {
       title,
       description,
