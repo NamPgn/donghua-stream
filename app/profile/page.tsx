@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowLeft, Settings, Heart, Clock, Calendar, Edit } from "lucide-react"
+import { ArrowLeft, Heart, Clock } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
