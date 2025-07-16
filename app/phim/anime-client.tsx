@@ -12,12 +12,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import MVLink from "@/components/Link"
 import { ANIME_PATHS } from "@/constant/path.constant"
 import { SOCIAL_LINKS } from "@/constant/social.constant"
+import { useWatchlistStore } from "@/store/watchlist"
 
 interface AnimeProduct {
 	_id: string
 	seri: string
 	isApproved: boolean
-	slug:string
+	slug: string
 }
 
 interface Rating {
@@ -77,6 +78,22 @@ interface AnimeClientProps {
 
 export function AnimeClient({ anime }: AnimeClientProps) {
 	const [isDescriptionOpen, setIsDescriptionOpen] = useState(true);
+	const { addAnime, removeAnime, isInWatchlist } = useWatchlistStore()
+	const isInList = isInWatchlist(anime._id)
+
+	const handleWatchlistClick = () => {
+		if (isInList) {
+			removeAnime(anime._id)
+		} else {
+			addAnime({
+				_id: anime._id,
+				name: anime.name,
+				linkImg: anime.linkImg,
+				slug: anime.slug,
+				anotherName: anime.anotherName
+			})
+		}
+	}
 	return (
 		<>
 			{/* Header with background image - Full width */}
@@ -158,9 +175,9 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 											</MVLink>
 									}
 								</Button>
-								<Button variant="outline" className="flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
-									<span className="hidden sm:inline">Thêm vào danh sách</span>
-									<span className="sm:hidden">Danh sách</span>
+								<Button variant="outline" onClick={handleWatchlistClick} className="flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
+									<span className="hidden sm:inline">{isInList ? 'Xóa khỏi danh sách' : 'Thêm vào danh sách'}</span>
+									<span className="sm:hidden">{isInList ? 'Xóa' : 'Thêm'}</span>
 								</Button>
 								<Button variant="outline" asChild className="cursor-pointer flex-1 md:flex-none text-xs md:text-sm px-2 md:px-4">
 									<a href={SOCIAL_LINKS.ZALO} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1 md:gap-2">

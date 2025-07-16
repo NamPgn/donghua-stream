@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, Heart } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState, useCallback } from 'react';
@@ -9,6 +9,9 @@ import debounce from 'lodash/debounce';
 import MVLink from '../Link';
 import Image from 'next/image';
 import { NAVIGATION } from '@/constant';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import { useWatchlistStore } from '@/store/watchlist';
 
 export default function Header() {
   const pathname = usePathname();
@@ -16,6 +19,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const { animes } = useWatchlistStore();
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
@@ -47,8 +51,8 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Desktop Navigation */}
           <div className="flex items-center gap-4 md:gap-8">
-            <MVLink href="/" className="text-xl md:text-2xl font-bold">
-              <Image src={'/images/logo.png'} alt='logo' width={80} height={80} />
+            <MVLink href="/" className="text-md md:text-1xl font-bold">
+              <Image src={'/images/b32705f7-9444-41f9-8457-d1cc7773a259-min.png'} alt='logo' width={60} height={60} />
             </MVLink>
             <nav className="hidden md:flex gap-6">
               {NAVIGATION.map((item) => (
@@ -67,6 +71,23 @@ export default function Header() {
           
           {/* Desktop Search and Profile */}
           <div className="hidden md:flex items-center gap-4">
+        
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <MVLink href="/profile" className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 relative">
+                  <Heart className="h-5 w-5" />
+                  {animes.length > 0 && (
+                    <Badge variant="secondary" className="absolute -top-1 -right-2 h-5 min-w-[20px] flex items-center justify-center p-0 text-xs">
+                      {animes.length}
+                    </Badge>
+                  )}
+                </MVLink>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Phim đã lưu</p>
+              </TooltipContent>
+            </Tooltip>
+
             <form onSubmit={handleSearch} className="relative w-64">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -76,9 +97,6 @@ export default function Header() {
                 onChange={handleInputChange}
               />
             </form>
-            {/* <Button variant="default" size="sm">
-               Đăng nhập
-            </Button> */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -121,7 +139,7 @@ export default function Header() {
           </div>
         )}
 
-        {/* Mobile NAVIGATION Menu */}
+        {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t">
             <nav className="flex flex-col py-4">
@@ -139,10 +157,16 @@ export default function Header() {
               ))}
               <MVLink
                 href="/profile"
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary"
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Profile
+                <Heart className="h-4 w-4" />
+                <span className="flex-1">Phim đã lưu</span>
+                {animes.length > 0 && (
+                  <Badge variant="secondary" className="h-5 min-w-[20px] flex items-center justify-center p-0 text-xs">
+                    {animes.length}
+                  </Badge>
+                )}
               </MVLink>
             </nav>
           </div>

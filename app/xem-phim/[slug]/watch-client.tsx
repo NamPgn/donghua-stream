@@ -1,8 +1,7 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -22,6 +21,7 @@ import MVLink from "@/components/Link";
 import { ANIME_PATHS } from "@/constant/path.constant";
 import { SOCIAL_LINKS } from "@/constant/social.constant";
 import MVImage from "@/components/ui/image";
+import { useHistoryStore } from "@/store/history";
 
 interface Product {
   _id: string;
@@ -49,6 +49,8 @@ interface Category {
   time: string;
   lang: string;
   quality: string;
+  thumbnail?: string;
+  linkImg?: string; // Thêm trường này nếu đang dùng linkImg thay vì thumbnail
   products: Product[];
 }
 
@@ -114,6 +116,20 @@ const ZaloButton = ({
 
 export function WatchClient({ anime }: { anime: Anime }) {
   const [comment, setComment] = useState("");
+  const addToHistory = useHistoryStore((state) => state.addToHistory);
+
+  // Thêm useEffect để cập nhật lịch sử xem
+  useEffect(() => {
+    addToHistory({
+      id: anime.category._id,
+      name: anime.name,
+      slug: anime.category.slug,
+      thumbnail: anime.category.linkImg || '', // Sử dụng linkImg nếu có
+      currentEpisode: anime.seri,
+      lastWatched: Date.now(),
+    });
+  }, [anime, addToHistory]);
+
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
   };

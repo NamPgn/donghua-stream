@@ -35,7 +35,7 @@ export const MEDIA_LINKS = {
   DEFAULT_AVATAR: '/images/default-avatar.png',
   DEFAULT_COVER: '/images/default-cover.jpg',
   DEFAULT_POSTER: '/images/default-poster.jpg',
-  LOGO: '/images/logo.png',
+  LOGO: '/images/b32705f7-9444-41f9-8457-d1cc7773a259-min.png',
   FAVICON: '/favicon.ico',
 } as const;
 
