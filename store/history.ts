@@ -29,20 +29,20 @@ export const useHistoryStore = create<HistoryState>()(
         set((state) => {
           // Lọc ra item cũ nếu đã tồn tại để cập nhật
           const filteredHistory = state.history.filter(
-            (item) => item.id !== newItem.id
+            (item) => item.slug !== newItem.slug
           );
           
           // Thêm item mới vào đầu mảng
           return {
-            history: [newItem, ...filteredHistory].slice(0, 50), // Giới hạn 50 items
+            history: [newItem, ...filteredHistory].slice(0, 10), // Giới hạn 50 items
           };
         });
       },
 
       // Xóa một item khỏi lịch sử
-      removeFromHistory: (id) => {
+      removeFromHistory: (slug) => {
         set((state) => ({
-          history: state.history.filter((item) => item.id !== id),
+          history: state.history.filter((item) => item.slug !== slug),
         }));
       },
 

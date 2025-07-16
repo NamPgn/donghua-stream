@@ -123,7 +123,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
     addToHistory({
       id: anime.category._id,
       name: anime.name,
-      slug: anime.category.slug,
+      slug: anime.slug,
       thumbnail: anime.category.linkImg || '', // Sử dụng linkImg nếu có
       currentEpisode: anime.seri,
       lastWatched: Date.now(),
