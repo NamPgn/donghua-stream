@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -64,6 +64,7 @@ interface Anime {
   copyright: string;
   comment: Comment[];
   zaloGroupLink?: string;
+  updatedAt: string;
 }
 
 // Component Zalo Button đẹp
@@ -117,6 +118,10 @@ const ZaloButton = ({
 export function WatchClient({ anime }: { anime: Anime }) {
   const [comment, setComment] = useState("");
   const addToHistory = useHistoryStore((state) => state.addToHistory);
+  const desktopEpisodeListRef = useRef<HTMLDivElement>(null);
+  const mobileEpisodeListRef = useRef<HTMLDivElement>(null);
+  const currentEpisodeRef = useRef<HTMLDivElement>(null);
+  const currentMobileEpisodeRef = useRef<HTMLDivElement>(null);
 
   // Thêm useEffect để cập nhật lịch sử xem
   useEffect(() => {
@@ -124,11 +129,44 @@ export function WatchClient({ anime }: { anime: Anime }) {
       id: anime.category._id,
       name: anime.name,
       slug: anime.slug,
-      thumbnail: anime.category.linkImg || '', // Sử dụng linkImg nếu có
+      thumbnail: anime.category.linkImg || '',
       currentEpisode: anime.seri,
       lastWatched: Date.now(),
     });
   }, [anime, addToHistory]);
+
+  // Thêm useEffect để scroll đến tập đang xem
+  useEffect(() => {
+    // Scroll cho desktop view
+    if (currentEpisodeRef.current && desktopEpisodeListRef.current) {
+      const container = desktopEpisodeListRef.current;
+      const element = currentEpisodeRef.current;
+      
+      const elementTop = element.offsetTop;
+      const containerTop = container.offsetTop;
+      const scrollPosition = elementTop - containerTop - (container.clientHeight / 2) + (element.clientHeight / 2);
+      
+      container.scrollTo({
+        top: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+
+    // Scroll cho mobile view
+    if (currentMobileEpisodeRef.current && mobileEpisodeListRef.current) {
+      const container = mobileEpisodeListRef.current;
+      const element = currentMobileEpisodeRef.current;
+      
+      const elementTop = element.offsetTop;
+      const containerTop = container.offsetTop;
+      const scrollPosition = elementTop - containerTop - (container.clientHeight / 2) + (element.clientHeight / 2);
+      
+      container.scrollTo({
+        top: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [anime.seri]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setComment(e.target.value);
@@ -197,34 +235,38 @@ export function WatchClient({ anime }: { anime: Anime }) {
                       </Button>
                     )}
                   </div>
-                  <div className="h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50">
+                  <div className="h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={mobileEpisodeListRef}>
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                       {anime.category.products.map(
                         (product: Product, index) => (
-                          <Button
+                          <div 
                             key={index}
-                            variant={
-                              Number(product.seri) === Number(anime.seri)
-                                ? "default"
-                                : "outline"
-                            }
-                            size="sm"
-                            className="w-full"
-                            disabled={!product.isApproved}
-                            asChild
+                            ref={Number(product.seri) === Number(anime.seri) ? currentMobileEpisodeRef : null}
                           >
-                            <MVLink
-                              href={
-                                anime.category.isMovie !== "drama"
-                                  ? `${ANIME_PATHS.WATCH}/${anime.category.slug}`
-                                  : `${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${product.seri}`
+                            <Button
+                              variant={
+                                Number(product.seri) === Number(anime.seri)
+                                  ? "default"
+                                  : "outline"
                               }
+                              size="sm"
+                              className="w-full"
+                              disabled={!product.isApproved}
+                              asChild
                             >
-                              {anime.category.isMovie !== "drama"
-                                ? "Full"
-                                : `Tập ${product.seri}`}
-                            </MVLink>
-                          </Button>
+                              <MVLink
+                                href={
+                                  anime.category.isMovie !== "drama"
+                                    ? `${ANIME_PATHS.WATCH}/${anime.category.slug}`
+                                    : `${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${product.seri}`
+                                }
+                              >
+                                {anime.category.isMovie !== "drama"
+                                  ? "Full"
+                                  : `Tập ${product.seri}`}
+                              </MVLink>
+                            </Button>
+                          </div>
                         )
                       )}
                     </div>
@@ -239,7 +281,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                 <h2 className="text-lg font-semibold mb-4 border-b pb-2">
                   Danh sách tập
                 </h2>
-                <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50">
+                <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={desktopEpisodeListRef}>
                   <div className="flex gap-2">
                     {prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
@@ -271,6 +313,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                           <div
                             key={index}
                             className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                            ref={Number(product.seri) === Number(anime.seri) ? currentEpisodeRef : null}
                           >
                             <div className="flex items-center gap-3">
                               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-medium">
@@ -303,7 +346,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                                 <MVLink
                                   href={`${ANIME_PATHS.WATCH}/${anime.category.slug}`}
                                 >
-                                  {Number(product.seri) === Number(anime.seri) ? 'Đang phát' : 'Xem'}
+                                  {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
                                 </MVLink>
                               </Button>
                             ) : (
@@ -344,7 +387,11 @@ export function WatchClient({ anime }: { anime: Anime }) {
               {anime.category?.isMovie === 'drama' ? "Tập " + anime.seri : ''}
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                <span>Đăng tải: 1/1/2025</span>
+                <span>Đăng tải: {new Date(anime.updatedAt).toLocaleDateString('vi-VN', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric'
+                })}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />

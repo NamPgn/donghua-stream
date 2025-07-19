@@ -251,7 +251,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 					<TabsContent value="episodes">
 						<div className="space-y-4">
 							<h2 className="text-xl font-semibold mb-3">Danh sách tập</h2>
-							<div className="grid gap-3">
+							<div className="grid gap-3 max-h-[500px] overflow-y-auto pr-2">
 								{anime.products && anime.products.length > 0
 									? anime.products.map((product, index) => (
 										<div
