@@ -50,7 +50,7 @@ interface Category {
   lang: string;
   quality: string;
   thumbnail?: string;
-  linkImg?: string; 
+  linkImg?: string;
   products: Product[];
 }
 
@@ -271,11 +271,11 @@ export function WatchClient({ anime }: { anime: Anime }) {
             <div className="hidden md:block w-full lg:w-1/4">
 
               <div className="bg-card rounded-lg shadow-sm p-4">
-                <h2 className="text-lg font-semibold mb-4 border-b pb-2">
-                  Danh sách tập
-                </h2>
-                <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={desktopEpisodeListRef}>
-                  <div className="flex gap-2">
+                <div className="mb-4 text-lg font-semibold">
+                  <h2 className="border-b pb-2">
+                    Danh sách tập
+                  </h2>
+                  <div className="flex gap-2 mt-4">
                     {anime.prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <MVLink
@@ -299,6 +299,9 @@ export function WatchClient({ anime }: { anime: Anime }) {
                       </Button>
                     )}
                   </div>
+                </div>
+                <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={desktopEpisodeListRef}>
+
                   <div className="space-y-4">
                     <div className="grid gap-3">
                       {anime.category.products.map(
