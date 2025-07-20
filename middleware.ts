@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl
-
   // Redirect từ /d/... → /phim/...
   if (pathname.startsWith('/d/')) {
     const newUrl = pathname.replace('/d/', '/xem-phim/')

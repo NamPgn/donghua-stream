@@ -50,7 +50,7 @@ interface Category {
   lang: string;
   quality: string;
   thumbnail?: string;
-  linkImg?: string; // Thêm trường này nếu đang dùng linkImg thay vì thumbnail
+  linkImg?: string; 
   products: Product[];
 }
 
@@ -64,7 +64,9 @@ interface Anime {
   copyright: string;
   comment: Comment[];
   zaloGroupLink?: string;
-  updatedAt: string;
+  createdAt: string;
+  prevEpisode: string;
+  nextEpisode: string;
 }
 
 // Component Zalo Button đẹp
@@ -141,11 +143,11 @@ export function WatchClient({ anime }: { anime: Anime }) {
     if (currentEpisodeRef.current && desktopEpisodeListRef.current) {
       const container = desktopEpisodeListRef.current;
       const element = currentEpisodeRef.current;
-      
+
       const elementTop = element.offsetTop;
       const containerTop = container.offsetTop;
       const scrollPosition = elementTop - containerTop - (container.clientHeight / 2) + (element.clientHeight / 2);
-      
+
       container.scrollTo({
         top: scrollPosition,
         behavior: 'smooth'
@@ -156,11 +158,11 @@ export function WatchClient({ anime }: { anime: Anime }) {
     if (currentMobileEpisodeRef.current && mobileEpisodeListRef.current) {
       const container = mobileEpisodeListRef.current;
       const element = currentMobileEpisodeRef.current;
-      
+
       const elementTop = element.offsetTop;
       const containerTop = container.offsetTop;
       const scrollPosition = elementTop - containerTop - (container.clientHeight / 2) + (element.clientHeight / 2);
-      
+
       container.scrollTo({
         top: scrollPosition,
         behavior: 'smooth'
@@ -178,15 +180,6 @@ export function WatchClient({ anime }: { anime: Anime }) {
   };
 
   const currentEpisode = anime.category.products[0];
-  const currentEpisodeNumber = Number.parseInt(currentEpisode?.seri || "1");
-  const totalEpisodes = Number.parseInt(
-    anime.category.products.length.toString() || "0"
-  );
-
-  const prevEpisode =
-    currentEpisodeNumber > 1 ? currentEpisodeNumber - 1 : null;
-  const nextEpisode =
-    currentEpisodeNumber < totalEpisodes ? currentEpisodeNumber + 1 : null;
 
   const zaloLink = anime.zaloGroupLink || SOCIAL_LINKS.ZALO;
   return (
@@ -212,10 +205,10 @@ export function WatchClient({ anime }: { anime: Anime }) {
                     Danh sách tập
                   </h2>
                   <div className="flex gap-2 mb-3">
-                    {prevEpisode && (
+                    {anime.prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <MVLink
-                          href={`${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${prevEpisode}`}
+                          href={`${ANIME_PATHS.WATCH}/${anime.prevEpisode}`}
                           className="flex items-center gap-1"
                         >
                           <ChevronLeft className="h-4 w-4" />
@@ -223,10 +216,10 @@ export function WatchClient({ anime }: { anime: Anime }) {
                         </MVLink>
                       </Button>
                     )}
-                    {nextEpisode && (
+                    {anime.nextEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <MVLink
-                          href={`${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${nextEpisode}`}
+                          href={`${ANIME_PATHS.WATCH}/${anime.nextEpisode}`}
                           className="flex items-center gap-1"
                         >
                           Tập sau
@@ -239,7 +232,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                       {anime.category.products.map(
                         (product: Product, index) => (
-                          <div 
+                          <div
                             key={index}
                             ref={Number(product.seri) === Number(anime.seri) ? currentMobileEpisodeRef : null}
                           >
@@ -283,10 +276,10 @@ export function WatchClient({ anime }: { anime: Anime }) {
                 </h2>
                 <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={desktopEpisodeListRef}>
                   <div className="flex gap-2">
-                    {prevEpisode && (
+                    {anime.prevEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <MVLink
-                          href={`${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${prevEpisode}`}
+                          href={`${ANIME_PATHS.WATCH}/${anime.prevEpisode}`}
                           className="flex items-center gap-1"
                         >
                           <ChevronLeft className="h-4 w-4" />
@@ -294,10 +287,10 @@ export function WatchClient({ anime }: { anime: Anime }) {
                         </MVLink>
                       </Button>
                     )}
-                    {nextEpisode && (
+                    {anime.nextEpisode && (
                       <Button variant="outline" size="sm" asChild>
                         <MVLink
-                          href={`${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${nextEpisode}`}
+                          href={`${ANIME_PATHS.WATCH}/${anime.nextEpisode}`}
                           className="flex items-center gap-1"
                         >
                           Tập sau
@@ -387,7 +380,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
               {anime.category?.isMovie === 'drama' ? "Tập " + anime.seri : ''}
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
-                <span>Đăng tải: {new Date(anime.updatedAt).toLocaleDateString('vi-VN', {
+                <span>Đăng tải: {new Date(anime.createdAt).toLocaleDateString('vi-VN', {
                   day: '2-digit',
                   month: 'long',
                   year: 'numeric'
