@@ -1,8 +1,10 @@
 "use client"
+import React from "react"
 import { useState, useRef, useEffect } from "react"
 import CryptoJS from "crypto-js"
 import { Monitor, Cloud, Link, Shield } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { CombiningEpisode } from "@/app/xem-phim/[slug]/watch-client"
 
 interface Product {
   _id: string
@@ -34,20 +36,22 @@ interface Anime {
   dailyMotionServer?: string
   server2?: string
   link?: string
+  voiceOverLink?: string
+  voiceOverLink2?: string
 }
 
 interface VideoPlayerProps {
   anime: Anime
   episode: Product
+  combiningEpisodes: CombiningEpisode | null
 }
 
-export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
+export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerProps) {
   const [videoSource, setVideoSource] = useState<string | null>(null)
-  const [currentServer, setCurrentServer] = useState<"dailymotion" | "server2" | "link">("dailymotion")
+  const [currentServer, setCurrentServer] = useState<"dailymotion" | "server2" | "link" | "voiceOverLink" | "voiceOverLink2">("dailymotion")
   const [isLoading, setIsLoading] = useState(true)
   const [adBlockEnabled, setAdBlockEnabled] = useState(true)
   const [showAdBlockStatus, setShowAdBlockStatus] = useState(true)
-
   const playerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
@@ -106,6 +110,13 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
 
     setIsLoading(true)
 
+    // Check if we have a combining episode first
+    if (combiningEpisodes && combiningEpisodes.link1) {
+      setVideoSource(addAdBlockParams(combiningEpisodes.link1))
+      setIsLoading(false)
+      return
+    }
+
     switch (currentServer) {
       case "dailymotion":
         if (anime.dailyMotionServer) {
@@ -141,6 +152,14 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
           return
         }
         break
+      case "voiceOverLink":
+        if (anime.voiceOverLink) {
+          const enhancedUrl = addAdBlockParams(anime.voiceOverLink)
+          setVideoSource(enhancedUrl)
+          setIsLoading(false)
+          return
+        }
+        break
     }
 
     // If current server failed, try others
@@ -152,7 +171,7 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       setVideoSource(null)
     }
     setIsLoading(false)
-  }, [anime, currentServer])
+  }, [anime, currentServer, combiningEpisodes])
 
   // Hàm thêm tham số chặn quảng cáo vào URL
   const addAdBlockParams = (url: string): string => {
@@ -209,16 +228,65 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
     }
   }, [adBlockEnabled])
 
-  const servers = [
-    {
-      id: "dailymotion",
-      name: "Server 1",
-      icon: <Monitor className="h-3 w-3" />,
-      tooltip: "Primary server (DailyMotion)",
-    },
-    { id: "server2", name: "Server 2", icon: <Cloud className="h-3 w-3" />, tooltip: "Backup server" },
-    { id: "link", name: "Server 3", icon: <Link className="h-3 w-3" />, tooltip: "Alternative source" },
-  ] as const
+  type ServerType = {
+    id: "dailymotion" | "server2" | "link" | "voiceOverLink" | "voiceOverLink2";
+    name: string;
+    icon: React.ReactNode;
+    tooltip: string;
+  };
+
+  const getAvailableServers = (data: any): ServerType[] => {
+    const servers: ServerType[] = [];
+    
+    if (data.dailyMotionServer) {
+      servers.push({
+        id: "dailymotion",
+        name: "Vietsub #1",
+        icon: <Monitor className="h-3 w-3" />,
+        tooltip: "Primary server (DailyMotion)",
+      });
+    }
+
+    if (data.server2) {
+      servers.push({
+        id: "server2", 
+        name: "Vietsub #2", 
+        icon: <Cloud className="h-3 w-3" />,
+        tooltip: "Backup server"
+      });
+    }
+
+    if (data.link) {
+      servers.push({
+        id: "link",
+        name: "Vietsub #3",
+        icon: <Link className="h-3 w-3" />,
+        tooltip: "Alternative source"
+      });
+    }
+
+    if (data.voiceOverLink) {
+      servers.push({
+        id: "voiceOverLink",
+        name: "Thuyết minh #1",
+        icon: <Link className="h-3 w-3" />,
+        tooltip: "Alternative source"
+      });
+    }
+
+    if (data.voiceOverLink2) {
+      servers.push({
+        id: "voiceOverLink2",
+        name: "Thuyết minh #2",
+        icon: <Link className="h-3 w-3" />,
+        tooltip: "Alternative source"
+      });
+    }
+
+    return servers;
+  };
+
+  const availableServers = getAvailableServers(anime);
 
   return (
     <div className="flex flex-col gap-2">
@@ -272,15 +340,17 @@ export function VideoPlayer({ anime, episode }: VideoPlayerProps) {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
         {/* Server Selection */}
         <div className="flex gap-2">
-          {servers.map((server) => (
+          {availableServers.map((server) => (
             <button
               key={server.id}
               onClick={() => setCurrentServer(server.id)}
               className={cn(
                 "flex items-center px-3 py-1.5 rounded text-xs font-medium transition-all",
                 currentServer === server.id ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200",
+                combiningEpisodes ? "opacity-50 cursor-not-allowed" : ""
               )}
               title={server.tooltip}
+              disabled={!!combiningEpisodes}
             >
               {server.icon}
               <span className="ml-1">{server.name}</span>

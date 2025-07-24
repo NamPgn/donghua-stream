@@ -101,7 +101,7 @@ export default function PopularPage() {
                     </div>
                     <div className="space-y-3">
                       {category.categories.map((anime: Anime, index: number) => (
-                        <MVLink key={anime.id} href={`${ANIME_PATHS.BASE}/${anime.id}`}>
+                        <MVLink key={anime.id} href={`${ANIME_PATHS.BASE}/${anime.slug}`}>
                           <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
                             <div className="font-medium text-muted-foreground w-5 text-center">{index + 1}</div>
                             <div className="relative h-16 w-12 overflow-hidden rounded">

@@ -147,10 +147,14 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 									<Clock className="h-4 w-4" />
 									<span>{anime.time}/tập</span>
 								</div>
-								<div className="flex items-center gap-1 text-white/90">
-									<Film className="h-4 w-4" />
-									<span>{anime.sumSeri} tập</span>
-								</div>
+								{
+									anime.isMovie === 'drama' && (
+										<div className="flex items-center gap-1 text-white/90">
+											<Film className="h-4 w-4" />
+											<span>{anime.sumSeri} tập</span>
+										</div>
+									)
+								}
 								<div className="flex items-center gap-1 text-white/90">
 									<Globe className="h-4 w-4" />
 									<span>{anime.lang}</span>
@@ -235,7 +239,7 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								</div>
 								<div>
 									<h3 className="font-medium">Thời lượng</h3>
-									<p className="text-muted-foreground">{anime.time}/tập</p>
+									<p className="text-muted-foreground">{anime.time}</p>
 								</div>
 								<div>
 									<h3 className="font-medium">Ngôn ngữ</h3>

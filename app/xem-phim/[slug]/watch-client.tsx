@@ -38,6 +38,13 @@ interface Comment {
   date: string;
 }
 
+export interface CombiningEpisode {
+  _id: string;
+  name: string;
+  slug: string;
+  episodesName: string;
+  link1: string;
+}
 interface Category {
   _id: string;
   name: string;
@@ -52,7 +59,10 @@ interface Category {
   thumbnail?: string;
   linkImg?: string;
   products: Product[];
+  combiningEpisodes: CombiningEpisode[];
 }
+
+
 
 interface Anime {
   name: string;
@@ -124,7 +134,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
   const mobileEpisodeListRef = useRef<HTMLDivElement>(null);
   const currentEpisodeRef = useRef<HTMLDivElement>(null);
   const currentMobileEpisodeRef = useRef<HTMLDivElement>(null);
-
+  const [combiningEpisodes, setCombiningEpisodes] = useState<CombiningEpisode | null>(null);
   // Thêm useEffect để cập nhật lịch sử xem
   useEffect(() => {
     addToHistory({
@@ -168,6 +178,8 @@ export function WatchClient({ anime }: { anime: Anime }) {
         behavior: 'smooth'
       });
     }
+
+
   }, [anime.seri]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -198,7 +210,7 @@ export function WatchClient({ anime }: { anime: Anime }) {
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
             <div className="w-full lg:w-3/4">
               <div className="rounded-lg overflow-hidden">
-                <VideoPlayer episode={currentEpisode} anime={anime} />
+                <VideoPlayer episode={currentEpisode} anime={anime} combiningEpisodes={combiningEpisodes} />
 
                 <div className="block md:hidden mt-4 rounded-lg p-4">
                   <h2 className="text-lg font-semibold mb-3 border-b pb-2">
@@ -228,51 +240,118 @@ export function WatchClient({ anime }: { anime: Anime }) {
                       </Button>
                     )}
                   </div>
-                  <div className="h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={mobileEpisodeListRef}>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                      {anime.category.products.map(
-                        (product: Product, index) => (
-                          <div
-                            key={index}
-                            ref={Number(product.seri) === Number(anime.seri) ? currentMobileEpisodeRef : null}
-                          >
-                            <Button
-                              variant={
-                                Number(product.seri) === Number(anime.seri)
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              className="w-full"
-                              disabled={!product.isApproved}
-                              asChild
-                            >
-                              <MVLink
-                                href={
-                                  anime.category.isMovie !== "drama"
-                                    ? `${ANIME_PATHS.WATCH}/${anime.category.slug}`
-                                    : `${ANIME_PATHS.WATCH}/${anime.category.slug}-episode-${product.seri}`
-                                }
+
+                  <Tabs defaultValue="list" className="w-full">
+                    {anime.category.combiningEpisodes?.length > 0 && (
+                      <TabsList className="w-full mb-4">
+                        <TabsTrigger value="list" className="flex-1">Danh sách tập</TabsTrigger>
+                        <TabsTrigger value="grouped" className="flex-1">Tập đã gộp</TabsTrigger>
+                      </TabsList>
+                    )}
+
+                    <TabsContent value="list" className="mt-0">
+                      <div className="h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={mobileEpisodeListRef}>
+                        <div className="space-y-2">
+                          {anime.category.products.map(
+                            (product: Product, index) => (
+                              <div
+                                key={index}
+                                ref={Number(product.seri) === Number(anime.seri) ? currentMobileEpisodeRef : null}
+                                className="flex items-center justify-between p-2 rounded-lg border hover:bg-muted/50 transition-colors"
                               >
-                                {anime.category.isMovie !== "drama"
-                                  ? "Full"
-                                  : `Tập ${product.seri}`}
-                              </MVLink>
-                            </Button>
+                                <div className="flex items-center gap-2">
+                                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                                    <h3 className="font-medium text-sm">
+                                      {anime.category.isMovie !== "drama" ? "Full" : `Tập ${product.seri}`}
+                                    </h3>
+                                    <p className="text-xs text-muted-foreground">
+                                      Đã phát hành
+                                    </p>
+                                  </div>
+                                </div>
+                                {anime.category.isMovie !== "drama" ? (
+                                  <Button
+                                    size="sm"
+                                    variant={
+                                      Number(product.seri) === Number(anime.seri)
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    asChild
+                                    disabled={!product.isApproved}
+                                  >
+                                    <MVLink
+                                      href={`${ANIME_PATHS.WATCH}/${anime.category.slug}`}
+                                    >
+                                      {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
+                                    </MVLink>
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    size="sm"
+                                    asChild
+                                    variant={
+                                      Number(product.seri) === Number(anime.seri)
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    disabled={!product.isApproved}
+                                  >
+                                    <MVLink
+                                      href={`${ANIME_PATHS.WATCH}/${product.slug}`}
+                                    >
+                                      {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
+                                    </MVLink>
+                                  </Button>
+                                )}
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    {anime.category.combiningEpisodes?.length > 0 && (
+                      <TabsContent value="grouped" className="mt-0">
+                        <div className="h-[200px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50">
+                          <div className="space-y-2">
+                            {anime.category.combiningEpisodes.map((product: CombiningEpisode, index) => {
+                              return (
+                                <div key={index} className="flex items-center justify-between p-2 rounded-lg border hover:bg-muted/50 transition-colors">
+                                  <div className="flex items-center gap-2">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                                      <h3 className="font-medium text-sm">
+                                        Tập {product.episodesName}
+                                      </h3>
+                                      <p className="text-xs text-muted-foreground">
+                                        Đã phát hành
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    className="cursor-pointer"
+                                    variant={combiningEpisodes?.episodesName === product.episodesName ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setCombiningEpisodes(product)}
+                                  >
+                                    <div>{combiningEpisodes?.episodesName === product.episodesName ? "Đang xem" : "Xem"}</div>
+                                  </Button>
+                                </div>
+                              );
+                            })}
                           </div>
-                        )
-                      )}
-                    </div>
-                  </div>
+                        </div>
+                      </TabsContent>
+                    )}
+                  </Tabs>
                 </div>
               </div>
             </div>
 
             <div className="hidden md:block w-full lg:w-1/4">
-
               <div className="bg-card rounded-lg shadow-sm p-4">
-                <div className="mb-4 text-lg font-semibold">
-                  <h2 className="border-b pb-2">
+                <div className="mb-4">
+                  <h2 className="text-lg font-semibold border-b pb-2">
                     Danh sách tập
                   </h2>
                   <div className="flex gap-2 mt-4">
@@ -300,75 +379,121 @@ export function WatchClient({ anime }: { anime: Anime }) {
                     )}
                   </div>
                 </div>
-                <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={desktopEpisodeListRef}>
 
-                  <div className="space-y-4">
-                    <div className="grid gap-3">
-                      {anime.category.products.map(
-                        (product: Product, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-                            ref={Number(product.seri) === Number(anime.seri) ? currentEpisodeRef : null}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-medium">
-                                {anime.category.isMovie === "drama" ? product.seri : 'Full'}
-                              </div>
-                              <div>
+                <Tabs defaultValue="list" className="w-full">
+                  {anime.category.combiningEpisodes?.length > 0 && (
+                    <TabsList className="w-full mb-4">
+                      <TabsTrigger value="list" className="flex-1">Danh sách tập</TabsTrigger>
+                      <TabsTrigger value="grouped" className="flex-1">Tập đã gộp</TabsTrigger>
+                    </TabsList>
+                  )}
+
+                  <TabsContent value="list" className="mt-0">
+                    <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50" ref={desktopEpisodeListRef}>
+                      <div className="space-y-4">
+                        <div className="grid gap-3">
+                          {anime.category.products.map(
+                            (product: Product, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                                ref={Number(product.seri) === Number(anime.seri) ? currentEpisodeRef : null}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary font-medium">
+                                    {anime.category.isMovie === "drama" ? product.seri : 'Full'}
+                                  </div>
+                                  <div>
+                                    {anime.category.isMovie !== "drama" ? (
+                                      <h3 className="font-medium">Full</h3>
+                                    ) : (
+                                      <h3 className="font-medium">
+                                        Tập {product.seri}
+                                      </h3>
+                                    )}
+                                    <p className="text-sm text-muted-foreground">
+                                      Đã phát hành
+                                    </p>
+                                  </div>
+                                </div>
                                 {anime.category.isMovie !== "drama" ? (
-                                  <h3 className="font-medium">Full</h3>
+                                  <Button
+                                    size="sm"
+                                    variant={
+                                      Number(product.seri) === Number(anime.seri)
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    asChild
+                                    disabled={!product.isApproved}
+                                  >
+                                    <MVLink
+                                      href={`${ANIME_PATHS.WATCH}/${anime.category.slug}`}
+                                    >
+                                      {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
+                                    </MVLink>
+                                  </Button>
                                 ) : (
-                                  <h3 className="font-medium">
-                                    Tập {product.seri}
-                                  </h3>
+                                  <Button
+                                    size="sm"
+                                    asChild
+                                    variant={
+                                      Number(product.seri) === Number(anime.seri)
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    disabled={!product.isApproved}
+                                  >
+                                    <MVLink
+                                      href={`${ANIME_PATHS.WATCH}/${product.slug}`}
+                                    >
+                                      {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
+                                    </MVLink>
+                                  </Button>
                                 )}
-                                <p className="text-sm text-muted-foreground">
-                                  Đã phát hành
-                                </p>
                               </div>
-                            </div>
-                            {anime.category.isMovie !== "drama" ? (
-                              <Button
-                                size="sm"
-                                variant={
-                                  Number(product.seri) === Number(anime.seri)
-                                    ? "default"
-                                    : "outline"
-                                }
-                                asChild
-                                disabled={!product.isApproved}
-                              >
-                                <MVLink
-                                  href={`${ANIME_PATHS.WATCH}/${anime.category.slug}`}
-                                >
-                                  {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
-                                </MVLink>
-                              </Button>
-                            ) : (
-                              <Button
-                                size="sm"
-                                asChild
-                                variant={
-                                  Number(product.seri) === Number(anime.seri)
-                                    ? "default"
-                                    : "outline"
-                                }
-                                disabled={!product.isApproved}
-                              >
-                                <MVLink
-                                  href={`${ANIME_PATHS.WATCH}/${product.slug}`}
-                                >
-                                  {Number(product.seri) === Number(anime.seri) ? 'Đang xem' : 'Xem'}
-                                </MVLink>
-                              </Button>
-                            )}
-                          </div>
-                        )
-                      )}
+                            )
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </TabsContent>
+
+                  {anime.category.combiningEpisodes?.length > 0 && (
+                    <TabsContent value="grouped" className="mt-0">
+                      <div className="h-[500px] overflow-y-auto pr-2 space-y-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-muted-foreground/30 hover:scrollbar-thumb-muted-foreground/50">
+                        <div className="space-y-4">
+                          <div className="grid gap-3">
+                            {anime.category.combiningEpisodes.map((product: CombiningEpisode, index) => {
+                              return (
+                                <div key={index} className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+                                  <div className="flex items-center gap-3">
+                                    <div>
+                                      <h3 className="font-medium">
+                                        Tập {product.episodesName}
+                                      </h3>
+                                      <p className="text-sm text-muted-foreground">
+                                        Đã phát hành
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <Button
+                                    className="cursor-pointer"
+                                    variant={combiningEpisodes?.episodesName === product.episodesName ? "default" : "outline"}
+                                    size="sm"
+                                    onClick={() => setCombiningEpisodes(product)}
+                                  >
+                                    <div>{combiningEpisodes?.episodesName === product.episodesName ? "Đang xem" : "Xem"}</div>
+                                  </Button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  )}
+                </Tabs>
               </div>
             </div>
           </div>
