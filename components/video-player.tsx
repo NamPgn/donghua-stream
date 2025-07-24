@@ -235,7 +235,7 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
     tooltip: string;
   };
 
-  const getAvailableServers = (data: any): ServerType[] => {
+  const getAvailableServers = (data: Anime): ServerType[] => {
     const servers: ServerType[] = [];
     
     if (data.dailyMotionServer) {
