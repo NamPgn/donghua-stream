@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       'wx2.sinaimg.cn'
     ],
   },
+  
 };
 
 export default nextConfig;

@@ -55,52 +55,20 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
   const playerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
-  const blockAdsAndPopups = () => {
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      try {
-        const iframeDoc = iframeRef.current.contentWindow.document
-        
-        const adSelectors = [
-          '[id*="ad"]',
-          '[class*="ad"]',
-          '[class*="advertisement"]',
-          '[class*="popup"]',
-          '[class*="overlay"]',
-          '.ad-container',
-          '.ads',
-          '.advertisement',
-          '.popup-overlay',
-          '.modal-overlay'
-        ]
+  // State to track if component has mounted
+  const [hasMounted, setHasMounted] = useState(false)
 
-        adSelectors.forEach(selector => {
-          const elements = iframeDoc.querySelectorAll(selector)
-          elements.forEach(el => {
-            if (el instanceof HTMLElement) {
-              el.style.display = 'none !important'
-              el.remove()
-            }
-          })
-        })
-
-        // Chặn window.open (popup)
-        iframeRef.current.contentWindow.open = () => null
-
-        // Chặn các sự kiện click không mong muốn
-        iframeDoc.addEventListener('click', (e) => {
-          const target = e.target as HTMLElement
-          if (target.tagName === 'A' && target.getAttribute('target') === '_blank') {
-            e.preventDefault()
-            e.stopPropagation()
-          }
-        }, true)
-
-      } catch {
-        // Cross-origin restrictions - không thể truy cập iframe content
-        console.log('Cannot access iframe content due to CORS policy')
+  // Effect to set initial server preference
+  useEffect(() => {
+    if (!hasMounted && anime) {
+      if (anime.voiceOverLink) {
+        setCurrentServer("voiceOverLink")
+      } else if (anime.voiceOverLink2) {
+        setCurrentServer("voiceOverLink2")
       }
+      setHasMounted(true)
     }
-  }
+  }, [anime, hasMounted])
 
   useEffect(() => {
     if (!anime) {
@@ -112,74 +80,83 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
 
     // Check if we have a combining episode first
     if (combiningEpisodes && combiningEpisodes.link1) {
-      setVideoSource(addAdBlockParams(combiningEpisodes.link1))
-      setIsLoading(false)
-      return
+      if (isValidUrl(combiningEpisodes.link1)) {
+        setVideoSource(addAdBlockParams(combiningEpisodes.link1))
+        setIsLoading(false)
+        return
+      }
     }
+
+    const trySetVideoSource = (url: string | undefined): boolean => {
+      if (url && isValidUrl(url)) {
+        setVideoSource(addAdBlockParams(url))
+        setIsLoading(false)
+        return true
+      }
+      return false
+    }
+
+    const tryDailyMotion = (): boolean => {
+      if (anime.dailyMotionServer) {
+        try {
+          const secretKey = process.env.NEXT_PUBLIC_SECERT_CRYPTO_KEY_PRODUCTS_DAILYMOTION_SERVER || ""
+          const decodedData = CryptoJS.AES.decrypt(anime.dailyMotionServer, secretKey).toString(CryptoJS.enc.Utf8)
+          
+          if (decodedData && isValidUrl(decodedData)) {
+            setVideoSource(addAdBlockParams(decodedData))
+            setIsLoading(false)
+            return true
+          }
+        } catch (error) {
+          console.error("Error decoding Dailymotion server:", error)
+        }
+      }
+      return false
+    }
+
+    let sourceSet = false
 
     switch (currentServer) {
       case "dailymotion":
-        if (anime.dailyMotionServer) {
-          try {
-            const secretKey = process.env.NEXT_PUBLIC_SECERT_CRYPTO_KEY_PRODUCTS_DAILYMOTION_SERVER || ""
-            const decodedData = CryptoJS.AES.decrypt(anime.dailyMotionServer, secretKey).toString(CryptoJS.enc.Utf8)
-
-            if (decodedData) {
-              // Thêm tham số để giảm quảng cáo
-              const enhancedUrl = addAdBlockParams(decodedData)
-              setVideoSource(enhancedUrl)
-              setIsLoading(false)
-              return
-            }
-          } catch (error) {
-            console.error("Error decoding Dailymotion server:", error)
-          }
-        }
+        sourceSet = tryDailyMotion()
         break
       case "server2":
-        if (anime.server2) {
-          const enhancedUrl = addAdBlockParams(anime.server2)
-          setVideoSource(enhancedUrl)
-          setIsLoading(false)
-          return
-        }
+        sourceSet = trySetVideoSource(anime.server2)
         break
       case "link":
-        if (anime.link) {
-          const enhancedUrl = addAdBlockParams(anime.link)
-          setVideoSource(enhancedUrl)
-          setIsLoading(false)
-          return
-        }
+        sourceSet = trySetVideoSource(anime.link)
         break
       case "voiceOverLink":
-        if (anime.voiceOverLink) {
-          const enhancedUrl = addAdBlockParams(anime.voiceOverLink)
-          setVideoSource(enhancedUrl)
-          setIsLoading(false)
-          return
-        }
+        sourceSet = trySetVideoSource(anime.voiceOverLink)
+        break
+      case "voiceOverLink2":
+        sourceSet = trySetVideoSource(anime.voiceOverLink2)
         break
     }
 
-    // If current server failed, try others
-    if (anime.server2) {
-      setVideoSource(addAdBlockParams(anime.server2))
-    } else if (anime.link) {
-      setVideoSource(addAdBlockParams(anime.link))
-    } else {
-      setVideoSource(null)
+    // If current server failed, try others in order
+    if (!sourceSet) {
+      sourceSet = tryDailyMotion() ||
+                 trySetVideoSource(anime.server2) ||
+                 trySetVideoSource(anime.link) ||
+                 trySetVideoSource(anime.voiceOverLink) ||
+                 trySetVideoSource(anime.voiceOverLink2)
+      
+      if (!sourceSet) {
+        setVideoSource(null)
+      }
     }
+
     setIsLoading(false)
   }, [anime, currentServer, combiningEpisodes])
 
   // Hàm thêm tham số chặn quảng cáo vào URL
   const addAdBlockParams = (url: string): string => {
     if (!adBlockEnabled) return url
-    
+
     try {
       const urlObj = new URL(url)
-      
+
       // Các tham số để giảm quảng cáo
       const adBlockParams = {
         'autoplay': '1',
@@ -228,6 +205,63 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
     }
   }, [adBlockEnabled])
 
+  // Function to validate URL
+  const isValidUrl = (urlString: string): boolean => {
+    try {
+      new URL(urlString)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const blockAdsAndPopups = () => {
+    if (iframeRef.current && iframeRef.current.contentWindow) {
+      try {
+        const iframeDoc = iframeRef.current.contentWindow.document
+
+        const adSelectors = [
+          '[id*="ad"]',
+          '[class*="ad"]',
+          '[class*="advertisement"]',
+          '[class*="popup"]',
+          '[class*="overlay"]',
+          '.ad-container',
+          '.ads',
+          '.advertisement',
+          '.popup-overlay',
+          '.modal-overlay'
+        ]
+
+        adSelectors.forEach(selector => {
+          const elements = iframeDoc.querySelectorAll(selector)
+          elements.forEach(el => {
+            if (el instanceof HTMLElement) {
+              el.style.display = 'none !important'
+              el.remove()
+            }
+          })
+        })
+
+        // Chặn window.open (popup)
+        iframeRef.current.contentWindow.open = () => null
+
+        // Chặn các sự kiện click không mong muốn
+        iframeDoc.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement
+          if (target.tagName === 'A' && target.getAttribute('target') === '_blank') {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }, true)
+
+      } catch {
+        // Cross-origin restrictions - không thể truy cập iframe content
+        console.log('Cannot access iframe content due to CORS policy')
+      }
+    }
+  }
+
   type ServerType = {
     id: "dailymotion" | "server2" | "link" | "voiceOverLink" | "voiceOverLink2";
     name: string;
@@ -237,7 +271,7 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
 
   const getAvailableServers = (data: Anime): ServerType[] => {
     const servers: ServerType[] = [];
-    
+
     if (data.dailyMotionServer) {
       servers.push({
         id: "dailymotion",
@@ -249,8 +283,8 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
 
     if (data.server2) {
       servers.push({
-        id: "server2", 
-        name: "Vietsub #2", 
+        id: "server2",
+        name: "Vietsub #2",
         icon: <Cloud className="h-3 w-3" />,
         tooltip: "Backup server"
       });
@@ -324,7 +358,7 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
 
         {/* Ad Block Status */}
         {adBlockEnabled && (
-          <div 
+          <div
             className={cn(
               "absolute top-4 left-4 bg-green-600/80 text-white text-xs px-2 py-1 rounded flex items-center gap-1 transition-opacity duration-300",
               showAdBlockStatus ? "opacity-100" : "opacity-0"
@@ -363,8 +397,8 @@ export function VideoPlayer({ anime, episode, combiningEpisodes }: VideoPlayerPr
           onClick={() => setAdBlockEnabled(!adBlockEnabled)}
           className={cn(
             "flex items-center px-3 py-1.5 rounded text-xs font-medium transition-all",
-            adBlockEnabled 
-              ? "bg-green-600 text-white hover:bg-green-700" 
+            adBlockEnabled
+              ? "bg-green-600 text-white hover:bg-green-700"
               : "bg-gray-300 text-gray-700 hover:bg-gray-400"
           )}
           title={adBlockEnabled ? "Disable ad blocking" : "Enable ad blocking"}
