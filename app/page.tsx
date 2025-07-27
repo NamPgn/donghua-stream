@@ -31,7 +31,6 @@ const Categories = lazy(() => import("./_components/Categories").then(module => 
   default: module.Categories
 })))
 
-// Hook để detect khi element xuất hiện trong viewport
 const useIntersectionObserver = (threshold = 0.1): UseIntersectionObserverReturn => {
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef<HTMLDivElement | null>(null)
@@ -57,7 +56,6 @@ const useIntersectionObserver = (threshold = 0.1): UseIntersectionObserverReturn
   return { ref, isVisible }
 }
 
-// Component wrapper với lazy loading
 const LazySection = ({ children, fallback, className = "" }: LazySectionProps) => {
   const { ref, isVisible } = useIntersectionObserver(0.1)
 
@@ -77,7 +75,6 @@ const LazySection = ({ children, fallback, className = "" }: LazySectionProps) =
 // Loading skeleton
 const SectionSkeleton = ({ height = "h-64" }: SectionSkeletonProps) => (
   <div className={`${height}`}>
-    {/* <HomeLoading /> */}
   </div>
 )
 
@@ -85,7 +82,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <Wrapper>
-
         <section className="mb-12">
           <FeaturedSlider />
         </section>

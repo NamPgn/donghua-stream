@@ -157,7 +157,14 @@ export function AnimeClient({ anime }: AnimeClientProps) {
 								}
 								<div className="flex items-center gap-1 text-white/90">
 									<Globe className="h-4 w-4" />
-									<span>{anime.lang}</span>
+									<span>
+										{anime.lang === 'ThuyetMinh-Vietsub' 
+											? 'Thuyết minh + Vietsub'
+											: anime.lang === 'ThuyetMinh'
+												? 'Thuyết minh'
+												: 'Vietsub'
+										}
+									</span>
 								</div>
 								<div className="flex items-center gap-1 text-white/90">
 									<BarChart4 className="h-4 w-4" />

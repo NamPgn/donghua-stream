@@ -120,3 +120,36 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes gentleSweep {
+  0% { transform: translateX(-100%) skewX(-12deg); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%) skewX(-12deg); opacity: 0; }
+}
+
+/* Custom animations for greeting component */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 4s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
