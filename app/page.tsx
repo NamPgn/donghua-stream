@@ -82,6 +82,11 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       <Wrapper>
+        {/* <div className="border-b bg-muted/30">
+        <div className="container py-3 flex justify-center">
+          <AdBanner position="header" size="banner" priority="high" />
+        </div>
+      </div> */}
         <section className="mb-12">
           <FeaturedSlider />
         </section>
@@ -114,6 +119,12 @@ export default function HomePage() {
         >
           <Categories />
         </LazySection>
+
+        {/* <div className="border-t bg-muted/30">
+          <div className="container py-3 flex justify-center fixed bottom-0">
+            <BottomBanner />
+          </div>
+        </div> */}
       </Wrapper>
     </div>
   )

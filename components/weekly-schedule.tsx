@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useSchedule } from "@/hooks/useSchedule"
-import type { AnimeContent } from "@/services/api/schedule.api"
+import type { AnimeContent, Tag } from "@/services/api/schedule.api"
 import MVLink from "./Link"
 import { ANIME_PATHS } from "@/constant/path.constant"
 
@@ -111,7 +111,7 @@ export function WeeklySchedulePreview() {
 													{/* Title & Type */}
 													<div className="space-y-0.5 sm:space-y-1">
 														<h4 className="font-medium text-xs sm:text-sm line-clamp-2 leading-tight">{anime.name}</h4>
-														<p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1">{anime.type}</p>
+														<p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1">{anime.tags.length > 0 ? anime.tags?.map((tag: Tag) => tag.name).join(', ') : '3D, Tiên Hiệp'}</p>
 													</div>
 
 													{/* Episode & Time */}
@@ -130,24 +130,22 @@ export function WeeklySchedulePreview() {
 
 													{/* Categories */}
 													<div className="flex flex-wrap gap-1 mt-1 sm:mt-2">
-														{anime.type
-															.split(", ")
-															.slice(0, 2)
-															.map((category) => (
+														{anime.tags
+															.map((category: Tag) => (
 																<Badge
-																	key={category}
+																	key={category._id}
 																	variant="secondary"
 																	className="text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 bg-muted/50 hover:bg-muted/80 transition-colors"
 																>
-																	{category}
+																	{category.name}
 																</Badge>
 															))}
-														{anime.type.split(", ").length > 2 && (
+														{anime.tags.length > 2 && (
 															<Badge
 																variant="outline"
 																className="text-[9px] sm:text-[10px] px-1.5 py-0 h-4 sm:h-5 opacity-60"
 															>
-																+{anime.type.split(", ").length - 2}
+																+{anime.tags.length - 2}
 															</Badge>
 														)}
 													</div>

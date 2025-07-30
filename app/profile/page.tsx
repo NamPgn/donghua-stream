@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
-import { ArrowLeft, Heart, Clock } from "lucide-react"
+import { ArrowLeft, Heart } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -12,11 +11,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import MVLink from "@/components/Link"
 import MVImage from "@/components/ui/image"
 import { ANIME_PATHS } from "@/constant/path.constant"
-import { useHistoryStore } from "@/store/history"
 
 export default function ProfilePage() {
   const { animes } = useWatchlistStore()
-  const { history, clearHistory } = useHistoryStore();
   // // Mock user data
   // const user = {
   //   name: "Người dùng",
@@ -84,10 +81,6 @@ export default function ProfilePage() {
                 <Heart className="h-4 w-4" />
                 Phim đã lưu ({animes.length})
               </TabsTrigger>
-              <TabsTrigger value="history" className="gap-1">
-                <Clock className="h-4 w-4" />
-                Lịch sử xem ({history.length})
-              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="favorites">
@@ -146,56 +139,6 @@ export default function ProfilePage() {
                     <Link href="/manage">
                       <Button variant="outline">Xem tất cả {animes.length} phim đã lưu</Button>
                     </Link>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="history">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold">Lịch sử xem</h2>
-                  <Button variant="outline" size="sm" onClick={() => {
-                    clearHistory();
-                  }}>
-                    Xóa lịch sử
-                  </Button>
-                </div>
-
-                {history.length > 0 ? (
-                  <div className="space-y-4">
-                    {history.slice(0, 10).map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center gap-4 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="relative h-16 w-12 overflow-hidden rounded">
-                          <Image src={item.thumbnail || ""} alt={item.name} fill className="object-cover" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium truncate">{item.name}</h3>
-                          <p className="text-sm text-muted-foreground truncate">Tập {item.currentEpisode}</p>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Đã xem gần đây
-                          </div>
-                        </div>
-                        <Button size="sm">Tiếp tục xem</Button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12 border rounded-lg">
-                    <h3 className="text-lg font-medium mb-2">Chưa có lịch sử xem</h3>
-                    <p className="text-muted-foreground mb-4">Bắt đầu xem phim và lịch sử của bạn sẽ xuất hiện ở đây</p>
-                    <Button asChild>
-                      <Link href="/">Khám phá phim</Link>
-                    </Button>
-                  </div>
-                )}
-
-                {animes.length > 10 && (
-                  <div className="text-center">
-                    <Button variant="outline">Xem tất cả {animes.length} mục trong lịch sử</Button>
                   </div>
                 )}
               </div>

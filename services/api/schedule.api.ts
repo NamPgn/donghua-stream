@@ -5,6 +5,11 @@ export interface AnimeProduct {
   seri: string
 }
 
+export interface Tag {
+  _id: string
+  name: string
+}
+
 export interface AnimeContent {
   _id: string
   name: string
@@ -15,6 +20,7 @@ export interface AnimeContent {
   time: string
   year: string
   slug: string
+  tags: Tag[]
 }
 
 export interface Schedule {

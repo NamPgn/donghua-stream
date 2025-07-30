@@ -45,6 +45,10 @@ export interface CombiningEpisode {
   episodesName: string;
   link1: string;
 }
+interface Tag {
+  _id: string;
+  name: string;
+}
 interface Category {
   _id: string;
   name: string;
@@ -62,6 +66,7 @@ interface Category {
   combiningEpisodes: CombiningEpisode[];
   status: string;
   sumSeri: string;
+  tags: Tag[];
 }
 
 
@@ -525,148 +530,151 @@ export function WatchClient({ anime }: { anime: Anime }) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
-  <div className="space-y-6">
-    <div className="p-4 rounded-lg border">
-      <div className="flex flex-wrap gap-2 mb-2">
-        <Badge variant="secondary">{anime.category.type}</Badge>
-        <Badge variant="secondary">{anime.category.isMovie}</Badge>
-        <Badge
-          variant="outline"
-          className="text-yellow-600 bg-yellow-50"
-        >
-          {anime.copyright}
-        </Badge>
-        
-        {/* Status Badge với Animation */}
-        {anime.category.status === 'pending' ? (
-          <Badge 
-            variant="outline" 
-            className="bg-blue-50 text-blue-700 border-blue-200 animate-pulse"
-          >
-            <div className="flex items-center gap-1.5">
-              {/* Animated broadcasting icon */}
-              <div className="relative">
-                <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping absolute"></div>
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-              </div>
-              <span className="text-xs font-medium">
-                Đang chiếu {anime.seri}/{anime.category.sumSeri}
-              </span>
-            </div>
-          </Badge>
-        ) : (
-          <Badge 
-            variant="outline" 
-            className="bg-green-50 text-green-700 border-green-200"
-          >
-            <div className="flex items-center gap-1.5">
-              {/* Completed checkmark */}
-              <div className="w-2 h-2 bg-green-500 rounded-full relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-1 h-1 bg-white rounded-full"></div>
-                </div>
-              </div>
-              <span className="text-xs font-medium">
-                Hoàn thành
-              </span>
-            </div>
-          </Badge>
-        )}
-      </div>
-      
-      <p className="mb-4">{anime.category.des}</p>
-      
-      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-        <div>Năm: {anime.category.year}</div>
-        <div>Thời lượng: {anime.category.time}</div>
-        <div>Ngôn ngữ: {anime.category.lang === 'ThuyetMinh-Vietsub'
-          ? 'Thuyết minh + Vietsub'
-          : anime.category.lang === 'ThuyetMinh'
-            ? 'Thuyết minh'
-            : 'Vietsub'
-        }</div>
-        <div>Chất lượng: {anime.category.quality}</div>
-        
-        {/* Thêm thông tin trạng thái chi tiết */}
-        {anime.category.status === 'pending' && (
-          <div className="flex items-center gap-1 text-blue-600">
-            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
-            <span>Cập nhật: {anime.seri}/{anime.category.sumSeri} tập</span>
-          </div>
-        )}
-      </div>
-    </div>
-
-    <Tabs defaultValue="comments" className="w-full">
-      <TabsList className="mb-6">
-        <TabsTrigger value="comments">Bình luận</TabsTrigger>
-      </TabsList>
-      <TabsContent value="comments">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Bình luận</h2>
-            {/* Zalo CTA trong comment section */}
-            <ZaloButton href={zaloLink} variant="ghost" size="sm">
-              <MessageCircle className="w-4 h-4" />
-              Chat trên Zalo
-            </ZaloButton>
-          </div>
-
-          <form
-            onSubmit={handleSubmitComment}
-            className="p-4 rounded-lg border mb-6"
-          >
-            <h3 className="font-medium mb-2">Thêm bình luận</h3>
-            <textarea
-              className="w-full p-2 border rounded-md mb-2 min-h-[100px]"
-              placeholder="Viết bình luận của bạn..."
-              value={comment}
-              onChange={handleCommentChange}
-            />
-            <div className="flex justify-between items-center">
-              <p className="text-sm text-muted-foreground">
-                💡 Tham gia nhóm Zalo để thảo luận realtime!
-              </p>
-              <Button type="submit">Đăng bình luận</Button>
-            </div>
-          </form>
-
           <div className="space-y-6">
-            {anime.comment && anime.comment.length > 0 ? (
-              anime.comment.map((comment: Comment, i: number) => (
-                <div key={i} className="p-4 rounded-lg border">
-                  <div className="flex justify-between mb-2">
-                    <div className="font-medium">{comment.user}</div>
-                    <div className="flex items-center gap-1 text-sm">
-                      <Star className="h-3 w-3 text-yellow-500" />
-                      <span>{comment.rating}/10</span>
+            <div className="p-4 rounded-lg border">
+              <div className="flex flex-wrap gap-2 mb-2">
+                {
+                  anime.category.tags?.map((tag: Tag) => (
+                    <Badge variant="secondary" key={tag._id}>{tag.name}</Badge>
+                  ))
+                }
+                <Badge
+                  variant="outline"
+                  className="text-yellow-600 bg-yellow-50"
+                >
+                  {anime.copyright}
+                </Badge>
+
+                {/* Status Badge với Animation */}
+                {anime.category.status === 'pending' ? (
+                  <Badge
+                    variant="outline"
+                    className="bg-blue-50 text-blue-700 border-blue-200 animate-pulse"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {/* Animated broadcasting icon */}
+                      <div className="relative">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping absolute"></div>
+                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                      </div>
+                      <span className="text-xs font-medium">
+                        Đang chiếu {anime.category.products[0].seri}/{anime.category.sumSeri}
+                      </span>
                     </div>
+                  </Badge>
+                ) : (
+                  <Badge
+                    variant="outline"
+                    className="bg-green-50 text-green-700 border-green-200"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {/* Completed checkmark */}
+                      <div className="w-2 h-2 bg-green-500 rounded-full relative">
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-1 h-1 bg-white rounded-full"></div>
+                        </div>
+                      </div>
+                      <span className="text-xs font-medium">
+                        Hoàn thành
+                      </span>
+                    </div>
+                  </Badge>
+                )}
+              </div>
+
+              <p className="mb-4">{anime.category.des}</p>
+
+              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                <div>Năm: {anime.category.year}</div>
+                <div>Thời lượng: {anime.category.time}</div>
+                <div>Ngôn ngữ: {anime.category.lang === 'ThuyetMinh-Vietsub'
+                  ? 'Thuyết minh + Vietsub'
+                  : anime.category.lang === 'ThuyetMinh'
+                    ? 'Thuyết minh'
+                    : 'Vietsub'
+                }</div>
+                <div>Chất lượng: {anime.category.quality}</div>
+
+                {/* Thêm thông tin trạng thái chi tiết */}
+                {anime.category.status === 'pending' && (
+                  <div className="flex items-center gap-1 text-blue-600">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span>Cập nhật: {anime.seri}/{anime.category.sumSeri} tập</span>
                   </div>
-                  <p className="text-muted-foreground mb-2">
-                    {comment.content}
-                  </p>
-                  <div className="text-xs text-muted-foreground">
-                    {comment.date}
+                )}
+              </div>
+            </div>
+
+            <Tabs defaultValue="comments" className="w-full">
+              <TabsList className="mb-6">
+                <TabsTrigger value="comments">Bình luận</TabsTrigger>
+              </TabsList>
+              <TabsContent value="comments">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">Bình luận</h2>
+                    {/* Zalo CTA trong comment section */}
+                    <ZaloButton href={zaloLink} variant="ghost" size="sm">
+                      <MessageCircle className="w-4 h-4" />
+                      Chat trên Zalo
+                    </ZaloButton>
+                  </div>
+
+                  <form
+                    onSubmit={handleSubmitComment}
+                    className="p-4 rounded-lg border mb-6"
+                  >
+                    <h3 className="font-medium mb-2">Thêm bình luận</h3>
+                    <textarea
+                      className="w-full p-2 border rounded-md mb-2 min-h-[100px]"
+                      placeholder="Viết bình luận của bạn..."
+                      value={comment}
+                      onChange={handleCommentChange}
+                    />
+                    <div className="flex justify-between items-center">
+                      <p className="text-sm text-muted-foreground">
+                        💡 Tham gia nhóm Zalo để thảo luận realtime!
+                      </p>
+                      <Button type="submit">Đăng bình luận</Button>
+                    </div>
+                  </form>
+
+                  <div className="space-y-6">
+                    {anime.comment && anime.comment.length > 0 ? (
+                      anime.comment.map((comment: Comment, i: number) => (
+                        <div key={i} className="p-4 rounded-lg border">
+                          <div className="flex justify-between mb-2">
+                            <div className="font-medium">{comment.user}</div>
+                            <div className="flex items-center gap-1 text-sm">
+                              <Star className="h-3 w-3 text-yellow-500" />
+                              <span>{comment.rating}/10</span>
+                            </div>
+                          </div>
+                          <p className="text-muted-foreground mb-2">
+                            {comment.content}
+                          </p>
+                          <div className="text-xs text-muted-foreground">
+                            {comment.date}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 border rounded-lg bg-muted/20">
+                        <MessageCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                        <p className="text-muted-foreground mb-4">
+                          Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
+                        </p>
+                        <ZaloButton href={zaloLink} variant="default" size="sm">
+                          Thảo luận trên Zalo
+                        </ZaloButton>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8 border rounded-lg bg-muted/20">
-                <MessageCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground mb-4">
-                  Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
-                </p>
-                <ZaloButton href={zaloLink} variant="default" size="sm">
-                  Thảo luận trên Zalo
-                </ZaloButton>
-              </div>
-            )}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
-      </TabsContent>
-    </Tabs>
-  </div>
-</div>
 
         {/* Floating Zalo Button - Always visible */}
         {/* <ZaloButton href={zaloLink} variant="floating" showIcon={false}>
