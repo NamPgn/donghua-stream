@@ -287,6 +287,9 @@ export function AnimeClient({ anime }: AnimeClientProps) {
                 <div>
                   <h3 className="font-medium">Thể loại</h3>
                   <p className="text-muted-foreground">
+
+
+                    
                     {anime.tags?.map((item) => item.name).join(", ")}
                   </p>
                 </div>
